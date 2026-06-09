@@ -370,7 +370,8 @@
     /* ─── PARTNER BG (only right column) ───────────────────── */
     .partner-bg {
       position: absolute;
-      inset: 0;
+      top: 0; bottom: 0;
+      left: 50%; right: 0;
       display: flex;
       flex-direction: row;
       gap: 8px;
@@ -857,10 +858,11 @@
     </div>
   </div>
 
+  <!-- partner logos — subtle background, right half only, full height -->
+  <div class="partner-bg" id="partner-bg"></div>
+
   <!-- RIGHT: floating composition -->
   <div class="core-right">
-    <!-- partner logos — subtle background texture -->
-    <div class="partner-bg" id="partner-bg"></div>
     <div class="app-comp" id="app-comp">
 
       <!-- phone secundário (atrás) -->
