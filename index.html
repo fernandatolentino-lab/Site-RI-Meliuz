@@ -201,6 +201,44 @@
       display: flex; align-items: center; justify-content: center;
     }
 
+    /* ─── PARTNER LOGOS BACKGROUND ──────────────────────────── */
+    .partner-bg {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%; right: 0;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      padding: 0 8px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.07;
+      overflow: hidden;
+    }
+    .partner-col {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 0 0 42px;
+    }
+    .partner-col:nth-child(even) { margin-top: 32px; }
+    .partner-col:nth-child(3n)   { margin-top: 16px; }
+    .pb {
+      width: 100%;
+      aspect-ratio: 1;
+      background: rgba(255,255,255,0.5);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      padding: 5px;
+    }
+    .pb img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
     /* ─── COMPOSITION ────────────────────────────────────────── */
     .app-comp { position: relative; width: 500px; height: 520px; }
 
@@ -815,6 +853,9 @@
     </div>
   </div>
 
+  <!-- partner logos subtle background, right half only -->
+  <div class="partner-bg" id="partner-bg"></div>
+
   <!-- RIGHT: floating composition -->
   <div class="core-right">
     <div class="app-comp" id="app-comp">
@@ -1381,5 +1422,36 @@
 </script>
 
 <script src="js/lang.js"></script>
+<script>
+  (function(){
+    const partners = [
+      'shopee','pontofrio','latam','oral-b','renner','hp','epoca',
+      'budweiser','downy','pague-menos','dell','mercado-livre','kabum',
+      'pepsi','absolut','natura','adidas','riachuelo','corona','ajinomoto',
+      'casas-bahia','fast-shop','nestle','nissin','magalu','aliexpress',
+      'shein','cobasi','lg','listerine','pampers','cea','nike','samsung',
+      'elma-chips','arcor','consul','centauro','americanas','ifood',
+      'becks','beefeater','spaten','guarana',
+    ];
+    function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+    const wall = document.getElementById('partner-bg');
+    const shuffled = shuffle(partners);
+    const COLS = 9;
+    for (let c = 0; c < COLS; c++) {
+      const col = document.createElement('div');
+      col.className = 'partner-col';
+      for (let r = 0; r < 10; r++) {
+        const file = shuffled[(c * 10 + r) % shuffled.length];
+        const d = document.createElement('div');
+        d.className = 'pb';
+        const img = new Image();
+        img.src = `images/parceiros/${file}.png`;
+        img.alt = file;
+        img.onload = () => { d.appendChild(img); col.appendChild(d); };
+      }
+      wall.appendChild(col);
+    }
+  })();
+</script>
 </body>
 </html>
