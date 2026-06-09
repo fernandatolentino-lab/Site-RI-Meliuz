@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração — Méliuz RI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #fd9cbf; --pink-d: #fd9cbf; --dark: #111;
+      --white: #fff; --off: #F6F6F4; --border: #E8E8E8;
+      --g4: #AAAAAA; --g6: #666; --g9: #111; --radius: 24px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; color: var(--g9); background: var(--white); -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 52px; background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 20px; font-weight: 900; color: var(--g9); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--pink-d); }
+    .logo-ri { font-style: normal; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; opacity: 0.45; margin-left: 1px; vertical-align: baseline; }
+    .nav-links { display: flex; gap: 16px; list-style: none; margin-left: 32px; }
+    .nav-links > li > a { font-size: 12px; font-weight: 500; color: var(--g6); text-decoration: none; transition: color 0.15s; white-space: nowrap; }
+    .nav-links > li > a:hover { color: var(--g9); }
+    .nav-item { position: relative; }
+    .nav-item:hover .nav-dd { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-item::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 20px; }
+    .nav-has-dd > a::after { content: ' ↓'; font-size: 10px; opacity: 0.4; }
+    .nav-dd {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 16px; padding: 8px; min-width: 220px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+      opacity: 0; pointer-events: none; transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s; z-index: 300;
+    }
+    .nav-dd a { display: block; padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--g6); text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+    .nav-dd a:hover { color: var(--g9); }
+    .nav-dd a.active { color: var(--pink-d); font-weight: 700; background: #fff0f6; }
+    .nav-right { display: flex; align-items: center; gap: 16px; margin-left: 24px; }
+    .nav-lang { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; color: var(--g4); text-decoration: none; }
+    .nav-cta { font-size: 12px; font-weight: 600; color: var(--white); background: var(--g9); padding: 8px 14px; border-radius: 7px; text-decoration: none; transition: opacity 0.15s; white-space: nowrap; }
+    .nav-cta:hover { opacity: 0.8; }
+    .nav-item.nav-active > a { color: var(--g9) !important; font-weight: 700; }
+
+
+    .section-content { padding: 56px 52px; flex: 1; }
+    .content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
+    .content-title { font-size: 22px; font-weight: 700; letter-spacing: -0.4px; color: var(--g9); }
+
+    .page-footer { background: var(--dark); padding: 32px 52px; display: flex; align-items: center; justify-content: space-between; }
+    .pf-logo { font-size: 18px; font-weight: 900; color: var(--white); letter-spacing: -0.5px; }
+    .pf-logo span { color: var(--pink); }
+    .pf-back { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.15s; }
+    .pf-back:hover { color: var(--white); }
+
+    /* Page-specific styles */
+    .subsection-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--g4);
+      margin-bottom: 6px;
+    }
+    .subsection-mandate {
+      font-size: 12px; color: var(--g4); margin-bottom: 24px;
+    }
+
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* Carousel */
+    .carousel-wrap { position: relative; }
+    .carousel-track-outer { overflow: hidden; }
+    .member-grid {
+      display: flex; gap: 16px;
+      transition: transform 0.35s ease;
+    }
+    .member-card {
+      flex: 0 0 200px;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 24px 20px 20px;
+      background: var(--off);
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .member-card:hover { background: #ebebea; }
+    .member-card.active { border-color: var(--g9); background: var(--white); }
+    .member-initials {
+      width: 80px; height: 80px; border-radius: 12px;
+      background: var(--off); margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800; color: var(--g9);
+      letter-spacing: -1px; overflow: hidden; flex-shrink: 0;
+    }
+    .member-initials img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top;
+    }
+    .member-card.active .member-initials { background: var(--border); }
+    .member-name { font-size: 14px; font-weight: 700; color: var(--g9); line-height: 1.3; min-height: 38px; display: flex; align-items: flex-start; justify-content: center; }
+    .member-role { font-size: 12px; color: var(--g6); margin-top: 4px; line-height: 1.4; }
+
+    /* Bio panel */
+    .member-bio-panel {
+      overflow: hidden; max-height: 0;
+      transition: max-height 0.35s ease;
+    }
+    .member-bio-panel.open { max-height: 500px; }
+    .member-bio-inner {
+      border: none; border-radius: 16px;
+      padding: 24px 28px; margin-top: 16px;
+      font-size: 14px; color: var(--g6); line-height: 1.75;
+    }
+    .bio-name { font-size: 16px; font-weight: 700; color: var(--g9); margin-bottom: 8px; }
+
+    /* Carousel arrows */
+    .carousel-btn {
+      position: absolute; top: 40%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: var(--white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; color: var(--g9);
+      transition: box-shadow 0.15s; z-index: 10;
+    }
+    .carousel-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+    .carousel-btn.prev { left: -20px; }
+    .carousel-btn.next { right: -20px; }
+
+    .subsection-exec {
+      margin-top: 56px; padding-top: 56px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">méliuz<em class="logo-ri">RI</em></a>
+  <ul class="nav-links">
+    <li class="nav-item nav-has-dd">
+      <a href="#" data-en="About Méliuz">Sobre o Méliuz</a>
+      <div class="nav-dd">
+        <a href="../sobre/quem-somos.html" data-en="Who We Are &amp; Our History">Quem Somos e Nossa História</a>
+        <a href="../sobre/cultura.html" data-en="Our Culture">Nossa Cultura</a>
+        <a href="../sobre/imprensa.html" data-en="Méliuz in the Press">Méliuz na Imprensa</a>
+        <a href="../sobre/glossario.html" data-en="Glossary">Glossário</a>
+        <a href="../sobre/para-empresas-clientes.html" data-en="For Companies &amp; Users">Para Empresas e Usuários</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="../index.html#btc">Bitcoin Treasury Strategy</a>
+      <div class="nav-dd">
+        <a href="../bitcoin/estrategia.html" data-en="Our Strategy">Nossa Estratégia</a>
+        <a href="../bitcoin/indicadores.html" data-en="BTC Indicators">Indicadores BTC</a>
+        <a href="../bitcoin/faq-btc.html" data-en="Bitcoin Strategy Team">Equipe Estratégia Bitcoin</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd nav-active">
+      <a href="#" data-en="Corporate Governance">Governança Corporativa</a>
+      <div class="nav-dd">
+        <a href="../governanca/composicao-acionaria.html" data-en="Shareholder Structure">Composição Acionária</a>
+        <a href="../governanca/administracao.html" class="active" data-en="Management">Administração</a>
+        <a href="../governanca/estatuto.html" data-en="Bylaws &amp; Policies">Estatuto e Políticas</a>
+        <a href="../governanca/assembleias.html" data-en="Meetings &amp; Assemblies">Assembleias e Reuniões</a>
+        <a href="../governanca/informe.html" data-en="Governance Report">Informe de Governança</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="#" data-en="Key Information">Principais Informações</a>
+      <div class="nav-dd">
+        <a href="../resultados/central.html" data-en="Results Hub">Central de Resultados</a>
+        <a href="../resultados/fatos-relevantes.html" data-en="Material Facts &amp; Disclosures">Fatos Relevantes e Comunicados</a>
+        <a href="../resultados/avisos.html" data-en="Shareholder Notices">Avisos aos Acionistas</a>
+        <a href="../apresentacoes/formulario-referencia.html" data-en="Reference Form">Formulário de Referência</a>
+        <a href="../resultados/valores-mobiliarios.html" data-en="Securities">Valores Mobiliários</a>
+        <a href="../apresentacoes/apresentacoes.html" data-en="Presentations">Apresentações</a>
+        <a href="../resultados/outros.html" data-en="Other Documents">Outros Documentos</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="#" data-en="Investor Services">Serviços ao Investidor</a>
+      <div class="nav-dd">
+        <a href="../servicos/mailing.html" data-en="Join the Mailing List">Cadastre-se no Mailing</a>
+        <a href="../servicos/contato.html" data-en="Contact Us">Fale Conosco</a>
+        <a href="../apresentacoes/calendario.html" data-en="Events Calendar">Calendário de Eventos</a>
+        <a href="../servicos/cobertura-analistas.html" data-en="Analyst Coverage">Cobertura de Analistas</a>
+        <a href="../servicos/faq.html" data-en="FAQ">Perguntas Frequentes</a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="nav-lang">PT · EN</a>
+    <a href="../servicos/contato.html" class="nav-cta" data-en="IR Contact">Contato RI</a>
+  </div>
+</nav>
+
+<!-- page-header removed, title moved into section-content -->
+<div class="section-content">
+  <div class="content-header">
+    <div class="content-title" data-en="Management">Administração</div>
+  </div>
+
+  <div class="subsection-title" data-en="Board of Directors">Conselho de Administração</div>
+  <div class="subsection-mandate" data-en="Term until 01/09/2026">Mandato até 01/09/2026</div>
+  <div class="carousel-wrap">
+    <button class="carousel-btn prev" data-target="grid-ca">‹</button>
+    <button class="carousel-btn next" data-target="grid-ca">›</button>
+    <div class="carousel-track-outer">
+    <div class="member-grid" id="grid-ca">
+    <div class="member-card" data-name="Israel Fernandes Salmen" data-bio="Natural de Governador Valadares (Minas Gerais), Israel é formado em ciências econômicas pela Universidade Federal de Minas Gerais (UFMG) em 2011. Possui mais de 16 anos de experiência em desenvolvimento de produto, novos negócios, vendas e gestão, e é o fundador da Companhia e empreendedor da Endeavor. Além disso, foi diretor comercial da Solo Investimentos, uma gestora de recursos da qual foi sócio fundador, de 2009 a 2011. Atualmente, Israel também é Presidente Institucional do Grupo CASH3.">
+      <div class="member-initials"><img src="../images/admin-israel.png" alt="Israel Fernandes Salmen"></div>
+      <div class="member-name">Israel Fernandes Salmen</div>
+      <div class="member-role" data-en="Chairman of the Board">Presidente do Conselho</div>
+    </div>
+    <div class="member-card" data-name="Tulio Braga" data-bio="Cursou Engenharia Mecânica na PUC Minas e possui mais de 20 anos de experiência em desenvolvimento e gestão de processos operacionais. Atuou por mais de 8 anos na Vale, com experiência internacional em países como Peru, Canadá e País de Gales. Se juntou ao time do Méliuz em 2015 e foi responsável por liderar a estruturação da área de operações e correlatas.">
+      <div class="member-initials"><img src="../images/admin-tulio.png" alt="Tulio Braga"></div>
+      <div class="member-name">Tulio Braga</div>
+      <div class="member-role" data-en="Vice-Chairman of the Board">Vice-Presidente do Conselho</div>
+    </div>
+    <div class="member-card" data-name="Gabriel Loures" data-bio="É formado em administração de empresas pela Universidade Federal de Minas Gerais e possui MBA em Administração e Gestão de Negócios pela Harvard Business School. Tem sólida experiência em M&A e Consultoria Estratégica, com passagem pela McKinsey & Company e boutique de investimento. Se juntou ao time do Méliuz em 2018 e foi responsável pela estratégia de internacionalização e expansão de verticais de negócio da Companhia. Atualmente, é CEO do Méliuz.">
+      <div class="member-initials"><img src="../images/admin-gabriel.png" alt="Gabriel Loures"></div>
+      <div class="member-name">Gabriel Loures</div>
+      <div class="member-role" data-en="Board Member and CEO">Conselheiro e CEO</div>
+    </div>
+    <div class="member-card" data-name="André Amaral Ribeiro" data-bio="Formado em Engenharia Química pela Universidade Federal de Minas Gerais (UFMG) em 2014, André Amaral possui mais de 8 anos de experiência em planejamento estratégico, finanças e planejamento corporativo, modelagem financeira, inteligência de negócio e growth. Foi, entre os anos de 2015 e 2017, business analyst e associate na Advisia OC&C Strategy Consultants e, entre os anos de 2013 e 2014, trainee na Vallourec. No Méliuz, André atuou inicialmente como Head de Estratégia e, hoje, além de membro do Conselho de Administração é Diretor de Produto, Tecnologia e Dados.">
+      <div class="member-initials"><img src="../images/admin-andre.png" alt="André Amaral Ribeiro"></div>
+      <div class="member-name">André Amaral Ribeiro</div>
+      <div class="member-role" data-en="Board Member">Conselheiro</div>
+    </div>
+    <div class="member-card" data-name="Matheus Costa Ferreira" data-bio="Matheus é mestre em Direito Empresarial (ênfase em Direito e Tecnologia), bacharel em Direito e em Ciências Contábeis, todos pela Universidade Federal de Minas Gerais, além de ser pós-graduado em Auditoria Contábil, pela Universidade Cândido Mendes. É sócio fundador do CFPB Advocacia Empresarial, e atua há mais de quinze anos como consultor jurídico nas áreas de Direito Societário e Inovação. Matheus já ocupa a posição de coordenador do Comitê de Auditoria do Méliuz desde 2020.">
+      <div class="member-initials"><img src="../images/admin-matheus.png" alt="Matheus Costa Ferreira"></div>
+      <div class="member-name">Matheus Costa Ferreira</div>
+      <div class="member-role" data-en="Board Member">Conselheiro</div>
+    </div>
+    <div class="member-card" data-name="Tiago Almeida" data-bio="Formado em Engenharia Mecânica pela Escola Politécnica da USP, Tiago Veloso de Almeida acumula mais de 18 anos de experiência no mercado financeiro, com passagem por bancos de investimento globais e family offices. É sócio fundador e Diretor de Gestão da Nello Wealth Management. Anteriormente, atuou como Chefe de Análise na Milestones Capital, Vice-Presidente de Equity Research no J.P. Morgan, com foco na América Latina, e Analista de Investimentos na Gávea Investimentos.">
+      <div class="member-initials"><img src="../images/admin-tiago.png" alt="Tiago Almeida"></div>
+      <div class="member-name">Tiago Almeida</div>
+      <div class="member-role" data-en="Independent Board Member">Conselheiro Independente</div>
+    </div>
+    <div class="member-card" data-name="Guilherme Bandeira" data-bio="Guilherme Bandeira é doutor em direito pela Universidade de São Paulo (USP), LL.M pela New York University (NYU), bacharel em direito pela Fundação Getúlio Vargas (FGV) e bacharel em filosofia na Universidade de São Paulo (USP). É advogado, especialista e consultor em Bitcoin há mais de sete anos, dedicando-se a assessorar na área técnica e regulatória de empresas.">
+      <div class="member-initials">GB</div>
+      <div class="member-name">Guilherme Bandeira</div>
+      <div class="member-role" data-en="Independent Board Member">Conselheiro Independente</div>
+    </div>
+    <div class="member-card" data-name="Roberto Christiano Oliveira" data-bio="Roberto Christiano possui mais de 20 anos de experiência profissional, tendo atuado como executivo nos setores de tecnologia, saúde e aviação, com foco em inovação, transformação digital e inteligência artificial. Possui especialização em Inteligência Artificial voltada para sistemas de saúde, capacitação em desenvolvimento de software full stack e certificação internacional ATLS (Instrutor). Roberto é fundador e CEO da MiMO Benefícios, healthtech com foco na integração de IA a serviços médicos e também idealizou a plataforma YouDoctor, que conecta mais de 5.000 médicos em todo o país.">
+      <div class="member-initials"><img src="../images/admin-roberto.png" alt="Roberto Christiano Oliveira"></div>
+      <div class="member-name">Roberto Christiano Oliveira</div>
+      <div class="member-role" data-en="Independent Board Member">Conselheiro Independente</div>
+    </div>
+    <div class="member-card" data-name="Pedro Henrique Sorrentino" data-bio="Pedro Sorrentino possui mais de 10 anos de experiência em venture capital, com atuação nos mercados dos Estados Unidos e Brasil. É Sócio-Diretor da Atman Capital, fundo crossborder que investe em startups de inteligência artificial, criptoativos, fintechs e longevidade. Já investiu mais de meio bilhão de reais em centenas de startups de alto impacto, incluindo mais de 15 unicórnios. Paulistano baseado em São Francisco, California é mestre em Estratégia Digital pela University of Colorado Boulder.">
+      <div class="member-initials">PS</div>
+      <div class="member-name">Pedro Henrique Sorrentino</div>
+      <div class="member-role" data-en="Independent Board Member">Conselheiro Independente</div>
+    </div>
+    </div></div>
+  </div>
+  <div class="member-bio-panel" id="bio-ca"><div class="member-bio-inner"><div class="bio-name" id="bio-ca-name"></div><div id="bio-ca-text"></div></div></div>
+
+  <div class="subsection-exec">
+    <div class="subsection-title" data-en="Statutory Executive Board">Diretoria Estatutária</div>
+    <div class="subsection-mandate" data-en="Term until 01/09/2026">Mandato até 01/09/2026</div>
+    <div class="carousel-wrap">
+      <button class="carousel-btn prev" data-target="grid-de">‹</button>
+      <button class="carousel-btn next" data-target="grid-de">›</button>
+      <div class="carousel-track-outer">
+      <div class="member-grid" id="grid-de">
+    <div class="member-card" data-name="Gabriel Loures" data-bio="É formado em administração de empresas pela Universidade Federal de Minas Gerais e possui MBA em Administração e Gestão de Negócios pela Harvard Business School. Tem sólida experiência em M&A e Consultoria Estratégica, com passagem pela McKinsey & Company e boutique de investimento. Se juntou ao time do Méliuz em 2018 e foi responsável pela estratégia de internacionalização e expansão de verticais de negócio da Companhia. Atualmente, é CEO do Méliuz.">
+      <div class="member-initials"><img src="../images/admin-gabriel.png" alt="Gabriel Loures"></div>
+      <div class="member-name">Gabriel Loures</div>
+      <div class="member-role">CEO</div>
+    </div>
+    <div class="member-card" data-name="André Amaral Ribeiro" data-bio="Formado em Engenharia Química pela Universidade Federal de Minas Gerais (UFMG) em 2014, André Amaral possui mais de 8 anos de experiência em planejamento estratégico, finanças e planejamento corporativo, modelagem financeira, inteligência de negócio e growth. Foi, entre os anos de 2015 e 2017, business analyst e associate na Advisia OC&C Strategy Consultants e, entre os anos de 2013 e 2014, trainee na Vallourec. No Méliuz, André atuou inicialmente como Head de Estratégia e, hoje, além de membro do Conselho de Administração é Diretor de Produto, Tecnologia e Dados.">
+      <div class="member-initials"><img src="../images/admin-andre.png" alt="André Amaral Ribeiro"></div>
+      <div class="member-name">André Amaral Ribeiro</div>
+      <div class="member-role" data-en="Director of Product, Technology and Data">Diretor de Produto, Tecnologia e Dados</div>
+    </div>
+    <div class="member-card" data-name="Tulio Braga" data-bio="Cursou Engenharia Mecânica na PUC Minas e possui mais de 20 anos de experiência em desenvolvimento e gestão de processos operacionais. Atuou por mais de 8 anos na Vale, com experiência internacional em países como Peru, Canadá e País de Gales. Se juntou ao time do Méliuz em 2015 e foi responsável por liderar a estruturação da área de operações e correlatas.">
+      <div class="member-initials"><img src="../images/admin-tulio.png" alt="Tulio Braga"></div>
+      <div class="member-name">Tulio Braga</div>
+      <div class="member-role" data-en="Chief Operating Officer">Diretor de Operações</div>
+    </div>
+    <div class="member-card" data-name="Mauro Rojas" data-bio="Formado em ciência da computação pelo Instituto de Computação da UFAM, com mestrado focado nas áreas de Recuperação de Informação, Machine Learning e Banco de Dados, Mauro é diretor de Plataforma no Méliuz. Foi co-fundador da Neemu, empresa amazonense que se tornou referência nacional no desenvolvimento de sistemas de busca e personalização para e-commerces e varejo físico. A Neemu dominou o mercado de tecnologia nesse segmento e foi adquirida pela Linx em 2015.">
+      <div class="member-initials"><img src="../images/admin-mauro.png" alt="Mauro Rojas"></div>
+      <div class="member-name">Mauro Rojas</div>
+      <div class="member-role" data-en="Platform Director">Diretor de Plataforma</div>
+    </div>
+    <div class="member-card" data-name="Marcio Loures Penna" data-bio="O Sr. Marcio Loures Penna é formado em Administração de Empresas e possui Mestrado em Finanças e Gestão pela Neoma Business School realizado em 2016/2017, em Paris, França. Possui sólida experiência na área financeira e de mercado de capitais, estando à frente da área de Relações com Investidores do Méliuz desde junho de 2021. Atuou nos últimos 15 anos em empresas renomadas do mercado, com passagens pela Petrobras (2019–2021), Light S.A. (2017–2019) e Vale S.A. (2007–2016).">
+      <div class="member-initials"><img src="../images/admin-marcio.png" alt="Marcio Loures Penna"></div>
+      <div class="member-name">Marcio Loures Penna</div>
+      <div class="member-role" data-en="IR and Corporate Governance Director">Diretor de RI e Governança Corporativa</div>
+    </div>
+    <div class="member-card" data-name="Michelle Meirelles" data-bio="A Sra. Michelle Meirelles é formada em Ciências Contábeis pela Universidade Federal de Minas Gerais e possui MBA em Direito Tributário pela FGV com extensão pela Ohio University. Possui mais de 15 anos de experiência na área financeira. Entre 2016 e 2019, foi responsável pela área de Technical Accounting da América Latina da Stellantis e, entre 2013 e 2016, trabalhou na FCA UK, em Londres. Atua no Méliuz desde fevereiro de 2021.">
+      <div class="member-initials"><img src="../images/admin-michelle.png" alt="Michelle Meirelles"></div>
+      <div class="member-name">Michelle Meirelles</div>
+      <div class="member-role" data-en="Chief Financial Officer">Diretora Financeira</div>
+    </div>
+    <div class="member-card" data-name="Dúnia Ruas Mourão" data-bio="Dúnia Ruas Mourão é pós-graduanda em Direito Bancário e Mercado Financeiro pela PUC-MG. Possui sólida experiência em Jurídico Corporativo, especialista em Direito do Trabalho & Previdenciário, Compliance e Governança Corporativa. Está à frente da área jurídica do Méliuz desde o IPO da Companhia, com passagens pela Esab Indústria e Comércio Ltda, MRV Engenharia e Magazine Luiza.">
+      <div class="member-initials"><img src="../images/admin-dunia.png" alt="Dúnia Ruas Mourão"></div>
+      <div class="member-name">Dúnia Ruas Mourão</div>
+      <div class="member-role" data-en="General Counsel">Diretora Jurídica</div>
+    </div>
+    <div class="member-card" data-name="Marcos Marchesi" data-bio="Formado em Engenharia Química pela UFMG, ingressou no Méliuz em 2016, tornando-se sócio da Companhia em 2018. Ao longo de sua trajetória, atuou em áreas estratégicas como Produto, Estratégia e Growth, acumulando sólida experiência em growth marketing, aquisição sustentável de usuários e escala de produtos digitais. Desde 2019 integra a área de Growth da empresa, sendo atualmente Diretor de Growth.">
+      <div class="member-initials"><img src="../images/admin-marcos.png" alt="Marcos Marchesi"></div>
+      <div class="member-name">Marcos Marchesi</div>
+      <div class="member-role" data-en="Growth Director">Diretor de Growth</div>
+    </div>
+      </div></div>
+    </div>
+    <div class="member-bio-panel" id="bio-de"><div class="member-bio-inner"><div class="bio-name" id="bio-de-name"></div><div id="bio-de-text"></div></div></div>
+  </div>
+
+  <div class="subsection-exec">
+    <div class="subsection-title" data-en="Audit Committee">Comitê de Auditoria</div>
+    <div class="subsection-mandate" data-en="Term until 01/09/2026">Mandato até 01/09/2026</div>
+    <div class="carousel-wrap">
+      <div class="carousel-track-outer">
+      <div class="member-grid" id="grid-ca2">
+    <div class="member-card" data-name="Matheus Costa Ferreira" data-bio="Matheus é mestre em Direito Empresarial (ênfase em Direito e Tecnologia), bacharel em Direito e em Ciências Contábeis, todos pela Universidade Federal de Minas Gerais, além de ser pós-graduado em Auditoria Contábil, pela Universidade Cândido Mendes. É sócio fundador do CFPB Advocacia Empresarial, e atua há mais de quinze anos como consultor jurídico nas áreas de Direito Societário e Inovação. Matheus já ocupa a posição de coordenador do Comitê de Auditoria do Méliuz desde 2020.">
+      <div class="member-initials"><img src="../images/admin-matheus.png" alt="Matheus Costa Ferreira"></div>
+      <div class="member-name">Matheus Costa Ferreira</div>
+      <div class="member-role" data-en="Coordinator">Coordenador</div>
+    </div>
+    <div class="member-card" data-name="Leonardo de Paiva Rocha" data-bio="Possui 40 anos de experiência profissional, tendo atuado como executivo financeiro e de RI em grandes organizações multinacionais e nacionais de capital aberto. Graduado em engenharia mecânica pelo Instituto Militar de Engenharia (IME-1981), possui especialização em administração de empresas pela PUC/RJ (1989). Participou de programas executivos na University of Chicago, Yale, Harvard Business School, The Wharton School e Stanford University. Em 2003, foi um dos três finalistas ao prêmio de melhor executivo de finanças concedido pelo IBEF-SP.">
+      <div class="member-initials"><img src="../images/admin-leonardo.png" alt="Leonardo de Paiva Rocha"></div>
+      <div class="member-name">Leonardo de Paiva Rocha</div>
+      <div class="member-role" data-en="Member">Membro</div>
+    </div>
+    <div class="member-card" data-name="Tiago Almeida" data-bio="Formado em Engenharia Mecânica pela Escola Politécnica da USP, Tiago Veloso de Almeida acumula mais de 18 anos de experiência no mercado financeiro, com passagem por bancos de investimento globais e family offices. É sócio fundador e Diretor de Gestão da Nello Wealth Management. Anteriormente, atuou como Chefe de Análise na Milestones Capital, Vice-Presidente de Equity Research no J.P. Morgan, com foco na América Latina, e Analista de Investimentos na Gávea Investimentos.">
+      <div class="member-initials"><img src="../images/admin-tiago.png" alt="Tiago Almeida"></div>
+      <div class="member-name">Tiago Almeida</div>
+      <div class="member-role" data-en="Member">Membro</div>
+    </div>
+      </div></div>
+    </div>
+    <div class="member-bio-panel" id="bio-ca2"><div class="member-bio-inner"><div class="bio-name" id="bio-ca2-name"></div><div id="bio-ca2-text"></div></div></div>
+  </div>
+
+</div>
+
+<script>
+  // Card click → show bio panel
+  document.querySelectorAll('.member-grid').forEach(grid => {
+    const panelId = 'bio-' + grid.id.replace('grid-', '');
+    const panel   = document.getElementById(panelId);
+    const nameEl  = document.getElementById(panelId + '-name');
+    const textEl  = document.getElementById(panelId + '-text');
+
+    grid.querySelectorAll('.member-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const isActive = card.classList.contains('active');
+        grid.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
+        panel.classList.remove('open');
+        if (!isActive) {
+          card.classList.add('active');
+          nameEl.textContent = card.dataset.name;
+          textEl.textContent = card.dataset.bio;
+          panel.classList.add('open');
+        }
+      });
+    });
+  });
+
+  // Carousel arrows
+  const cardW = 216; // 200px + 16px gap
+  document.querySelectorAll('.carousel-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const grid = document.getElementById(btn.dataset.target);
+      const dir  = btn.classList.contains('next') ? 1 : -1;
+      const cur  = parseInt(grid.style.transform?.replace(/[^-\d]/g,'') || '0');
+      const max  = -(grid.scrollWidth - grid.closest('.carousel-track-outer').offsetWidth);
+      const next = Math.min(0, Math.max(max, cur - dir * cardW * 4));
+      grid.style.transform = `translateX(${next}px)`;
+    });
+  });
+</script>
+
+<footer class="page-footer">
+  <div class="pf-logo" data-en="méliuz">méliuz</div>
+  <a href="../index.html" class="pf-back" data-en="← Back to Home Page">← Voltar para a Página Inicial</a>
+</footer>
+
+<script src="../js/lang.js"></script>
+</body>
+</html>

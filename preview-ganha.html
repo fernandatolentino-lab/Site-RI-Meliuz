@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview — Ganha-Ganha-Ganha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink:   #ff90b9;
+      --pink-d: #e2005a;
+      --pink-bg: #fbe5f2;
+      --dark:   #111;
+      --white:  #fff;
+      --off:    #F6F6F4;
+      --border: #E8E8E8;
+      --g4:     #AAAAAA;
+      --g6:     #666;
+      --g9:     #111;
+    }
+    body { font-family: 'Montserrat', sans-serif; color: var(--g9); background: #f0f0ee; -webkit-font-smoothing: antialiased; }
+
+    /* ── PAGE LABEL ── */
+    .preview-bar {
+      background: var(--g9); color: #fff;
+      padding: 12px 52px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════
+       OPÇÃO A — Três linhas alternadas (Wise)
+       Com label grande + texto à direita
+       ══════════════════════════════════ */
+    .section-label {
+      padding: 48px 52px 16px;
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--g4);
+    }
+
+    .ganha-a {
+      background: var(--white);
+      padding: 0 52px 80px;
+    }
+    .ga-title {
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 800; letter-spacing: -1.5px;
+      color: var(--g9); line-height: 1.15;
+      padding: 64px 0 56px;
+      border-bottom: 1px solid var(--border);
+      max-width: 640px;
+    }
+    .ga-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      padding: 52px 0;
+      align-items: start;
+    }
+    .ga-who {
+      font-size: clamp(52px, 6vw, 84px);
+      font-weight: 900; letter-spacing: -3px;
+      line-height: 1; color: var(--border);
+      padding-right: 32px;
+      transition: color 0.3s;
+    }
+    .ga-row:hover .ga-who { color: var(--pink); }
+    .ga-row:nth-child(3):hover .ga-who { color: #f7931a; }
+    .ga-content {}
+    .ga-role {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--g4);
+      margin-bottom: 16px;
+    }
+    .ga-headline {
+      font-size: 20px; font-weight: 700; color: var(--g9);
+      line-height: 1.35; margin-bottom: 16px; letter-spacing: -0.4px;
+    }
+    .ga-body {
+      font-size: 15px; color: var(--g6); line-height: 1.75;
+    }
+
+
+    /* ══════════════════════════════════
+       OPÇÃO B — Três cards lado a lado
+       Clean, estilo Apple/Linear
+       ══════════════════════════════════ */
+    .ganha-b {
+      background: var(--off);
+      padding: 80px 52px;
+    }
+    .gb-title {
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 800; letter-spacing: -1.5px;
+      color: var(--g9); line-height: 1.15;
+      margin-bottom: 52px;
+      max-width: 480px;
+    }
+    .gb-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .gb-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 40px 36px 44px;
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .gb-num {
+      font-size: 13px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--pink-d);
+    }
+    .gb-card:nth-child(2) .gb-num { color: var(--g6); }
+    .gb-card:nth-child(3) .gb-num { color: #f7931a; }
+    .gb-role {
+      font-size: 26px; font-weight: 800; letter-spacing: -0.8px;
+      color: var(--g9); line-height: 1.2;
+    }
+    .gb-divider {
+      width: 32px; height: 2px; background: var(--border);
+      border-radius: 2px;
+    }
+    .gb-card:nth-child(1) .gb-divider { background: var(--pink); }
+    .gb-card:nth-child(3) .gb-divider { background: #f7931a; }
+    .gb-body {
+      font-size: 14px; color: var(--g6); line-height: 1.7;
+    }
+
+
+    /* ══════════════════════════════════
+       OPÇÃO C — Uma única linha horizontal
+       Números grandes em destaque
+       Estilo Airbnb Fast Facts
+       ══════════════════════════════════ */
+    .ganha-c {
+      background: var(--white);
+      padding: 80px 52px;
+      border-top: 1px solid var(--border);
+    }
+    .gc-title {
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 800; letter-spacing: -1.5px;
+      color: var(--g9); line-height: 1.15;
+      margin-bottom: 64px;
+      max-width: 480px;
+    }
+    .gc-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .gc-item {
+      padding: 40px 40px 40px 0;
+      border-right: 1px solid var(--border);
+    }
+    .gc-item:last-child { border-right: none; padding-left: 40px; padding-right: 0; }
+    .gc-item:nth-child(2) { padding-left: 40px; }
+    .gc-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--white);
+      background: var(--pink-d);
+      padding: 4px 10px; border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .gc-item:nth-child(2) .gc-tag { background: var(--g9); }
+    .gc-item:nth-child(3) .gc-tag { background: #f7931a; }
+    .gc-who {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.8px;
+      color: var(--g9); margin-bottom: 14px; line-height: 1.2;
+    }
+    .gc-body {
+      font-size: 14px; color: var(--g6); line-height: 1.75;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="preview-bar">Preview — Seção Ganha-Ganha-Ganha · 3 opções de layout</div>
+
+
+<!-- ═══════ OPÇÃO A ═══════ -->
+<div class="section-label">Opção A — Linhas alternadas (Wise)</div>
+<section class="ganha-a">
+  <h2 class="ga-title">Um modelo que gera valor para todos os lados.</h2>
+
+  <div class="ga-row">
+    <div class="ga-who">Usuários</div>
+    <div class="ga-content">
+      <div class="ga-role">Para quem compra</div>
+      <div class="ga-headline">Benefícios reais em cada compra do dia a dia.</div>
+      <div class="ga-body">O usuário do Méliuz acumula cashback nas compras feitas com parceiros e pode usar o saldo como quiser — transferir para a conta, pagar contas ou reinvestir. Sem pontos. Sem restrição.</div>
+    </div>
+  </div>
+
+  <div class="ga-row">
+    <div class="ga-who">Parceiros</div>
+    <div class="ga-content">
+      <div class="ga-role">Para quem vende</div>
+      <div class="ga-headline">Um canal de aquisição eficiente e com intenção de compra.</div>
+      <div class="ga-body">Mais de 1.000 marcas usam o Méliuz para alcançar consumidores já com intenção de compra. A plataforma entrega aquisição, conversão e retenção de clientes dentro de um único ecossistema.</div>
+    </div>
+  </div>
+
+  <div class="ga-row">
+    <div class="ga-who">Méliuz</div>
+    <div class="ga-content">
+      <div class="ga-role">Para o negócio</div>
+      <div class="ga-headline">Receita gerada pelo volume de transações intermediadas.</div>
+      <div class="ga-body">O Méliuz ganha uma comissão sobre cada transação realizada na plataforma. Quanto mais valor gera para usuários e parceiros, mais a empresa cresce — o alinhamento de interesses está no centro do modelo.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ OPÇÃO B ═══════ -->
+<div class="section-label">Opção B — Três cards lado a lado (Linear/Apple)</div>
+<section class="ganha-b">
+  <h2 class="gb-title">Um modelo que funciona para os três lados.</h2>
+  <div class="gb-grid">
+
+    <div class="gb-card">
+      <div class="gb-num">01</div>
+      <div class="gb-role">Usuários</div>
+      <div class="gb-divider"></div>
+      <div class="gb-body">Recebem cashback e benefícios financeiros reais em compras do dia a dia — sem pontos, sem restrição de uso.</div>
+    </div>
+
+    <div class="gb-card">
+      <div class="gb-num">02</div>
+      <div class="gb-role">Parceiros</div>
+      <div class="gb-divider"></div>
+      <div class="gb-body">Acessam mais de 45 milhões de usuários com intenção de compra, pagando apenas por resultado.</div>
+    </div>
+
+    <div class="gb-card">
+      <div class="gb-num">03</div>
+      <div class="gb-role">Méliuz</div>
+      <div class="gb-divider"></div>
+      <div class="gb-body">Gera receita proporcional ao valor criado para os dois lados — o crescimento do negócio está estruturalmente alinhado com o crescimento do ecossistema.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════ OPÇÃO C ═══════ -->
+<div class="section-label">Opção C — Tags + colunas separadas por linha</div>
+<section class="ganha-c">
+  <h2 class="gc-title">Três lados. Um ecossistema.</h2>
+  <div class="gc-row">
+
+    <div class="gc-item">
+      <div class="gc-tag">Usuários</div>
+      <div class="gc-who">Benefícios reais, sem complicação.</div>
+      <div class="gc-body">Cashback em dinheiro em mais de 1.000 parceiros. O saldo é livre — sem pontos, sem validade, sem restrição de uso.</div>
+    </div>
+
+    <div class="gc-item">
+      <div class="gc-tag">Parceiros</div>
+      <div class="gc-who">Alcance com intenção de compra.</div>
+      <div class="gc-body">Um canal de aquisição, conversão e retenção dentro de um único ecossistema com 45 milhões de usuários ativos.</div>
+    </div>
+
+    <div class="gc-item">
+      <div class="gc-tag">Méliuz</div>
+      <div class="gc-who">Receita alinhada ao valor criado.</div>
+      <div class="gc-body">A comissão por transação cria um modelo onde o crescimento da empresa e o valor gerado ao ecossistema são a mesma coisa.</div>
+    </div>
+
+  </div>
+</section>
+
+<script src="../js/lang.js"></script>
+</body>
+</html>

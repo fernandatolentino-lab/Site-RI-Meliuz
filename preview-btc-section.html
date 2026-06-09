@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview — Seção BTC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Montserrat', sans-serif; background: #f0f0ee; display: flex; flex-direction: column; gap: 48px; padding: 48px; -webkit-font-smoothing: antialiased; }
+
+    .label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #999; margin-bottom: 12px; }
+
+    /* ── OPÇÃO 1: fundo branco ── */
+    .section-a {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 24px;
+      padding: 72px 64px;
+      max-width: 960px;
+    }
+    .section-a .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #aaa; margin-bottom: 20px;
+    }
+    .section-a h2 {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.8px;
+      color: #111; line-height: 1.3; max-width: 560px; margin-bottom: 20px;
+    }
+    .section-a p {
+      font-size: 16px; color: #666; line-height: 1.75;
+      max-width: 560px; margin-bottom: 40px;
+    }
+    .ctx-row {
+      display: flex; gap: 40px; align-items: center;
+      border-top: 1px solid #e8e8e8; padding-top: 28px;
+    }
+    .ctx-item { display: flex; flex-direction: column; gap: 4px; }
+    .ctx-num { font-size: 15px; font-weight: 700; color: #111; letter-spacing: -0.3px; }
+    .ctx-desc { font-size: 11px; color: #aaa; font-weight: 500; }
+    .ctx-sep { width: 1px; height: 32px; background: #e8e8e8; }
+
+    /* ── OPÇÃO 2: fundo escuro ── */
+    .section-b {
+      background: #111;
+      border-radius: 24px;
+      padding: 72px 64px;
+      max-width: 960px;
+    }
+    .section-b .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px;
+    }
+    .section-b h2 {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.8px;
+      color: #fff; line-height: 1.3; max-width: 560px; margin-bottom: 20px;
+    }
+    .section-b p {
+      font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.75;
+      max-width: 560px; margin-bottom: 40px;
+    }
+    .section-b .ctx-row {
+      border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px;
+    }
+    .section-b .ctx-num { color: rgba(255,255,255,0.85); }
+    .section-b .ctx-desc { color: rgba(255,255,255,0.25); }
+    .section-b .ctx-sep { background: rgba(255,255,255,0.08); }
+
+    /* ── OPÇÃO 3: split ── */
+    .section-c {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-radius: 24px; overflow: hidden;
+      max-width: 960px; border: 1px solid #e8e8e8;
+    }
+    .section-c-left {
+      background: #fff; padding: 56px 48px;
+    }
+    .section-c-right {
+      background: #111; padding: 56px 48px;
+    }
+    .section-c-left .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #aaa; margin-bottom: 20px;
+    }
+    .section-c-left h2 {
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+      color: #111; line-height: 1.3; margin-bottom: 28px;
+    }
+    .section-c-left p {
+      font-size: 15px; color: #666; line-height: 1.7; margin-bottom: 32px;
+    }
+    .section-c-left .ctx-row {
+      display: flex; flex-direction: column; gap: 16px;
+      border-top: 1px solid #e8e8e8; padding-top: 24px;
+    }
+    .section-c-left .ctx-item { flex-direction: row; align-items: center; gap: 12px; }
+    .section-c-left .ctx-num { font-size: 14px; font-weight: 700; color: #111; min-width: 90px; }
+    .section-c-left .ctx-desc { font-size: 12px; color: #aaa; }
+
+    .section-c-right .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 20px;
+    }
+    .section-c-right h2 {
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+      color: #fff; line-height: 1.3; margin-bottom: 20px;
+    }
+    .section-c-right p {
+      font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.75;
+    }
+    .btc-num {
+      font-size: 48px; font-weight: 900; color: #F7931A;
+      letter-spacing: -2px; margin-top: 36px; line-height: 1;
+    }
+    .btc-label {
+      font-size: 13px; color: rgba(255,255,255,0.3); margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="label">Opção 1 — Fundo branco, números como rodapé contextual</p>
+  <div class="section-a">
+    <div class="eyebrow">Bitcoin Treasury Strategy</div>
+    <h2>O Méliuz é uma Bitcoin Treasury Company.</h2>
+    <p>Utilizamos o caixa gerado pela operação para acumular Bitcoin de forma sistemática, com o objetivo de maximizar o Bitcoin por ação ao longo do tempo.</p>
+    <div class="ctx-row">
+      <div class="ctx-item">
+        <span class="ctx-num">+R$105M</span>
+        <span class="ctx-desc">EBITDA ajustado</span>
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item">
+        <span class="ctx-num">Zero</span>
+        <span class="ctx-desc">Dívida</span>
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item">
+        <span class="ctx-num">+25%</span>
+        <span class="ctx-desc">Crescimento de receita</span>
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item">
+        <span class="ctx-num">+45M</span>
+        <span class="ctx-desc">Usuários cadastrados</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="label">Opção 2 — Fundo escuro, mesmo layout</p>
+  <div class="section-b">
+    <div class="eyebrow">Bitcoin Treasury Strategy</div>
+    <h2>O Méliuz é uma Bitcoin Treasury Company.</h2>
+    <p>Utilizamos o caixa gerado pela operação para acumular Bitcoin de forma sistemática, com o objetivo de maximizar o Bitcoin por ação ao longo do tempo.</p>
+    <div class="ctx-row">
+      <div class="ctx-item">
+        <span class="ctx-num">+R$105M</span>
+        <span class="ctx-desc">EBITDA ajustado</span>
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item">
+        <span class="ctx-num">Zero</span>
+        <span class="ctx-desc">Dívida</span>
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item">
+        <span class="ctx-num">+25%</span>
+        <span class="ctx-desc">Crescimento de receita</span>
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item">
+        <span class="ctx-num">+45M</span>
+        <span class="ctx-desc">Usuários cadastrados</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="label">Opção 3 — Split: negócio à esquerda, estratégia BTC à direita</p>
+  <div class="section-c">
+    <div class="section-c-left">
+      <div class="eyebrow">A operação</div>
+      <h2>Um negócio rentável e sem dívida.</h2>
+      <p>A operação gera caixa de forma consistente — e é essa base que viabiliza a estratégia.</p>
+      <div class="ctx-row">
+        <div class="ctx-item">
+          <span class="ctx-num">+R$105M</span>
+          <span class="ctx-desc">EBITDA ajustado</span>
+        </div>
+        <div class="ctx-item">
+          <span class="ctx-num">Zero</span>
+          <span class="ctx-desc">Dívida</span>
+        </div>
+        <div class="ctx-item">
+          <span class="ctx-num">+25%</span>
+          <span class="ctx-desc">Crescimento de receita</span>
+        </div>
+        <div class="ctx-item">
+          <span class="ctx-num">+45M</span>
+          <span class="ctx-desc">Usuários cadastrados</span>
+        </div>
+      </div>
+    </div>
+    <div class="section-c-right">
+      <div class="eyebrow">Bitcoin Treasury Strategy</div>
+      <h2>O caixa da operação é alocado em Bitcoin.</h2>
+      <p>O objetivo é maximizar o Bitcoin por ação ao longo do tempo, de forma acretiva e sem emissão de novas ações.</p>
+      <div class="btc-num">6,9%</div>
+      <div class="btc-label">Bitcoin Yield gerado em 6 meses</div>
+    </div>
+  </div>
+
+<script src="../js/lang.js"></script>
+</body>
+</html>

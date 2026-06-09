@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Méliuz — Relações com Investidores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:    #fd9cbf;
+      --pink-dark: #d4005e;
+      --orange:  #F7931A;
+      --dark:    #080808;
+      --white:   #FFFFFF;
+      --border:  #E8E8E8;
+      --gray-4:  #AAAAAA;
+      --gray-6:  #666666;
+      --gray-9:  #111111;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── TICKER BAR (fixed bottom) ──────────────────────────── */
+    .ticker {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      height: 40px;
+      background: rgba(10,10,10,0.96);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; gap: 64px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5);
+    }
+    .ticker-item strong { color: var(--white); font-weight: 700; }
+    .tick-up   { color: #00C864; font-size: 12px; font-weight: 600; }
+    .tick-down { color: #FF4444; font-size: 12px; font-weight: 600; }
+    .tick-sep  { width: 1px; height: 16px; background: rgba(255,255,255,0.1); }
+
+    /* ─── NAV ────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    nav.light {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav.dark {
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    nav.on-pink {
+      background: rgba(220,0,75,0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .nav-logo {
+      font-size: 20px; font-weight: 900; text-decoration: none; letter-spacing: -0.5px;
+      transition: color 0.3s;
+    }
+    nav.light   .nav-logo { color: var(--gray-9); }
+    nav.dark    .nav-logo,
+    nav.on-pink .nav-logo { color: var(--white); }
+    .nav-logo span { color: var(--pink); }
+    nav.on-pink .nav-logo span { color: rgba(255,255,255,0.7); }
+    .logo-ri { font-style: normal; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; opacity: 0.45; margin-left: 1px; vertical-align: baseline; }
+
+    .nav-links { display: flex; gap: 10px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 500; text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav.light   .nav-links a { color: var(--gray-6); }
+    nav.dark    .nav-links a,
+    nav.on-pink .nav-links a { color: rgba(255,255,255,0.55); }
+    nav.light   .nav-links a:hover { color: var(--gray-9); }
+    nav.dark    .nav-links a:hover,
+    nav.on-pink .nav-links a:hover { color: var(--white); }
+
+    /* ── dropdown ── */
+    .nav-item { position: relative; }
+    .nav-item:hover .nav-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-item::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 20px; }
+    .nav-dropdown {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 220px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+      opacity: 0; pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 200;
+    }
+    .nav-dropdown a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      color: var(--gray-6) !important;
+      text-decoration: none; transition: background 0.15s, color 0.15s !important;
+      white-space: nowrap;
+    }
+    .nav-dropdown a:hover {
+      background: var(--gray-100);
+      color: var(--gray-9) !important;
+    }
+    .nav-dropdown-divider {
+      height: 1px; background: var(--border); margin: 4px 8px;
+    }
+    .nav-has-dropdown > a::after {
+      content: ' ↓'; font-size: 10px; opacity: 0.5;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-lang {
+      font-size: 11px; font-weight: 600; letter-spacing: 1.2px;
+      text-decoration: none; transition: color 0.3s;
+    }
+    nav.light   .nav-lang { color: var(--gray-4); }
+    nav.dark    .nav-lang,
+    nav.on-pink .nav-lang { color: rgba(255,255,255,0.3); }
+
+    .nav-cta {
+      font-size: 12px; font-weight: 600; color: var(--white);
+      padding: 8px 14px; border-radius: 7px; text-decoration: none;
+      white-space: nowrap; transition: background 0.3s, opacity 0.15s;
+    }
+    nav.light   .nav-cta { background: var(--gray-9); }
+    nav.dark    .nav-cta { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); }
+    nav.on-pink .nav-cta { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.25); }
+    .nav-cta:hover { opacity: 0.8; }
+
+    /* ─── SIDE DOTS (navigation hint) ───────────────────────── */
+    .side-dots {
+      position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+      z-index: 150;
+      display: flex; flex-direction: column; gap: 12px; align-items: center;
+    }
+    .sdot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer; transition: all 0.3s;
+      position: relative;
+    }
+    .sdot.active-pink   { background: var(--white); width: 6px; height: 20px; border-radius: 3px; }
+    .sdot.active-orange { background: var(--orange); width: 6px; height: 20px; border-radius: 3px; }
+    .sdot.active-dark   { background: var(--gray-9); width: 6px; height: 20px; border-radius: 3px; }
+
+    /* ─── SECTION 1 — CORE BUSINESS ─────────────────────────── */
+    .s-core {
+      height: 100vh; min-height: 640px;
+      background: var(--pink);
+      padding: 64px 52px 56px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 48px;
+      position: relative; overflow: hidden;
+    }
+
+    /* decorative circle */
+    .core-circle {
+      position: absolute;
+      left: -180px; bottom: -200px;
+      width: 560px; height: 560px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+    .core-circle-2 {
+      position: absolute;
+      left: 60px; bottom: -120px;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      pointer-events: none;
+    }
+
+    .core-left { position: relative; z-index: 1; }
+    .core-right {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── COMPOSITION ────────────────────────────────────────── */
+    .app-comp { position: relative; width: 500px; height: 520px; }
+
+    /* phone main — front, larger */
+    .phone-main-wrap {
+      position: absolute; right: 10px; top: 20px;
+      z-index: 6; will-change: transform;
+      filter: drop-shadow(0 40px 72px rgba(0,0,0,0.28));
+      transition: filter 0.3s;
+    }
+    .phone-main-wrap .phone {
+      width: 212px; height: 432px; border-radius: 38px; border-width: 5px;
+    }
+    .phone-main-wrap .phone-notch { width: 72px; height: 18px; }
+
+    /* phone secondary — behind, smaller */
+    .phone-sec-wrap {
+      position: absolute; left: 6px; top: 72px;
+      z-index: 4; will-change: transform;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.18));
+    }
+    .phone-sec-wrap .phone {
+      width: 168px; height: 344px; border-radius: 32px; border-width: 5px;
+    }
+    .phone-sec-wrap .phone-notch { width: 60px; height: 15px; }
+
+    /* card anchors */
+    .card-anchor { position: absolute; z-index: 10; will-change: transform; }
+    .ca-0 { left: 120px; top: 130px; }
+    .ca-1 { right: -68px; top: 16px; }
+    .ca-2 { right: -50px; bottom: 44px; }
+    .ca-3 { left: 8px; bottom: -18px; }
+
+    /* ── glassmorphism cards ── */
+    .comp-card {
+      background: rgba(255,255,255,0.68);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+      border-radius: 18px; cursor: default;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .comp-card:hover {
+      box-shadow: 0 18px 48px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    /* card 0: produto */
+    .cc-0 { width: 150px; padding: 12px; }
+    .cc-prod-img {
+      width: 100%; aspect-ratio: 1; border-radius: 12px;
+      background: linear-gradient(135deg, #f8f8f8, #efefef);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; margin-bottom: 10px; font-size: 40px;
+    }
+    .cc-prod-img img { width: 85%; height: 85%; object-fit: contain; display: block; }
+    .cc-brand { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #bbb; text-transform: uppercase; margin-bottom: 2px; }
+    .cc-name  { font-size: 11px; font-weight: 700; color: #111; line-height: 1.3; margin-bottom: 4px; }
+    .cc-price { font-size: 13px; font-weight: 900; color: #111; margin-bottom: 8px; }
+    .cc-row   { display: flex; align-items: center; justify-content: space-between; }
+    .cc-badge { background: #fff0f6; color: var(--pink); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+    .cc-cta-sm { font-size: 9px; font-weight: 700; color: var(--pink); opacity: 0.8; }
+
+    /* card 1: promo categoria */
+    .cc-1 { width: 138px; overflow: hidden; }
+    .cc-1-grad {
+      background: linear-gradient(135deg, #a993e8, #d4a8f2);
+      padding: 14px; min-height: 92px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .cc-1-tag  { font-size: 8px; font-weight: 700; letter-spacing: 1.2px; color: rgba(255,255,255,0.7); text-transform: uppercase; margin-bottom: 4px; }
+    .cc-1-name { font-size: 14px; font-weight: 900; color: #fff; line-height: 1.15; }
+    .cc-1-body { padding: 10px 14px; display: flex; align-items: baseline; gap: 5px; }
+    .cc-1-pct  { font-size: 22px; font-weight: 900; color: var(--pink); letter-spacing: -0.5px; }
+    .cc-1-sub  { font-size: 10px; color: #888; line-height: 1.3; }
+
+    /* card 2: percentual grande */
+    .cc-2 { width: 116px; padding: 14px; }
+    .cc-2-icon  { width: 34px; height: 34px; border-radius: 9px; background: #f0f8f0; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+    .cc-2-store { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #bbb; text-transform: uppercase; margin-bottom: 2px; }
+    .cc-2-pct   { font-size: 36px; font-weight: 900; color: var(--pink); letter-spacing: -2px; line-height: 1; }
+    .cc-2-label { font-size: 10px; color: #aaa; margin-top: 3px; }
+
+    /* card 3: cashback confirmado */
+    .cc-3 {
+      padding: 14px 16px; border-radius: 16px;
+      display: flex; align-items: center; gap: 12px;
+      min-width: 210px;
+      border-left: 3px solid var(--pink);
+    }
+    .cc-3-body { flex: 1; }
+    .cc-3-amount { font-size: 16px; font-weight: 900; color: #111; letter-spacing: -0.5px; margin-bottom: 2px; }
+    .cc-3-label { font-size: 11px; font-weight: 700; color: #333; margin-bottom: 1px; }
+    .cc-3-store { font-size: 11px; font-weight: 400; color: #999; }
+    .cc-3-check {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--pink);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .cc-3-check svg { width: 14px; height: 14px; stroke: var(--pink); }
+
+    .s-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; padding: 5px 12px; border-radius: 4px;
+      margin-bottom: 28px;
+    }
+    .tag-white { background: rgba(255,255,255,0.22); color: var(--white); }
+    .tag-orange-soft { background: rgba(247,147,26,0.15); color: var(--orange); }
+
+    .s-title {
+      font-size: clamp(28px, 3.2vw, 46px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.2px; color: var(--white);
+      margin-bottom: 32px;
+    }
+    .s-title .muted { opacity: 0.5; font-weight: 300; }
+    .s-title .semi  { opacity: 0.75; font-weight: 500; }
+
+    .s-sub {
+      font-size: 19px; font-weight: 400; line-height: 1.55;
+      color: rgba(255,255,255,0.7);
+      max-width: 440px; margin-bottom: 40px;
+    }
+
+    .s-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 44px; }
+
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600;
+      background: var(--white); color: var(--pink-dark);
+      padding: 13px 24px; border-radius: 8px;
+      text-decoration: none; transition: opacity 0.15s;
+    }
+    .btn-white:hover { opacity: 0.88; }
+
+    .btn-outline-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600;
+      background: transparent; color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      padding: 12px 22px; border-radius: 8px;
+      text-decoration: none; transition: all 0.15s;
+    }
+    .btn-outline-white:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+    .btn-ghost-white {
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .btn-ghost-white:hover { color: var(--white); }
+
+    /* scroll hint */
+    .scroll-hint {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 500; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+    }
+    .scroll-hint-arrow {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: rgba(255,255,255,0.4);
+    }
+
+    /* ─── RIGHT SIDE: phone mockup ──────────────────────────── */
+    .core-right {
+      display: flex; justify-content: center; align-items: center;
+      position: relative; z-index: 1;
+    }
+
+    /* outer glow */
+    .phone-wrap {
+      position: relative;
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,0.18));
+    }
+    .phone-wrap::before {
+      content: '';
+      position: absolute; inset: -24px;
+      border-radius: 60px;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* phone frame */
+    .phone {
+      width: 260px; height: 530px;
+      background: #1a1a1a;
+      border-radius: 44px;
+      border: 6px solid #2a2a2a;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.08),
+        0 2px 0 rgba(255,255,255,0.06);
+      position: relative; overflow: hidden;
+    }
+
+    /* notch */
+    .phone-notch {
+      position: absolute; top: 10px; left: 50%;
+      transform: translateX(-50%);
+      width: 80px; height: 22px;
+      background: #1a1a1a;
+      border-radius: 0 0 14px 14px;
+      z-index: 10;
+    }
+    .phone-notch::before {
+      content: '';
+      position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+      width: 10px; height: 10px;
+      background: #2d2d2d;
+      border-radius: 50%;
+    }
+
+    /* screen area */
+    .phone-screen {
+      position: absolute; inset: 0;
+      background: #f7f7f7;
+      overflow: hidden;
+    }
+
+    /* phone base image — static */
+    .phone-base-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top;
+      display: block;
+    }
+
+    /* phone video */
+    .phone-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center;
+      display: block; z-index: 1;
+    }
+    .phone-fallback { position: absolute; inset: 0; }
+    /* secondary phone — background-image fills frame perfectly */
+    .phone-sec-wrap .phone-screen {
+      background-image: url('images/fundo.png');
+      background-size: cover;
+      background-position: top center;
+      background-repeat: no-repeat;
+    }
+    .phone-sec-wrap .phone-screen img { display: none; }
+
+    /* only the promotional banner cycles */
+    .banner-cycle {
+      position: absolute; z-index: 2;
+      /* top = where banner starts in phone, height = banner height */
+      top: 152px; left: 0; right: 0; height: 60px;
+      overflow: hidden;
+    }
+    .bcycle-slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      overflow: hidden;
+    }
+    .bcycle-slide.active { opacity: 1; }
+    /* img fills phone width, negative margin reveals the banner strip */
+    .bcycle-slide img {
+      width: 100%;
+      display: block;
+      margin-top: -152px;
+    }
+
+    /* dots */
+    .phone-dots {
+      position: absolute; bottom: 10px; left: 0; right: 0;
+      display: flex; justify-content: center; gap: 5px; z-index: 20;
+    }
+    .pdot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+    .pdot.active { background: var(--pink); width: 14px; border-radius: 3px; }
+
+    /* ─── BRIDGE ────────────────────────────────────────────── */
+    .s-bridge {
+      background: var(--dark);
+      padding: 36px 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .bridge-text {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.2);
+    }
+    .bridge-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, rgba(232,0,90,0.3), rgba(247,147,26,0.3));
+      margin: 0 32px;
+    }
+
+    /* ─── SECTION 2 — BITCOIN TREASURY ──────────────────────── */
+    .s-btc {
+      height: 100vh; min-height: 600px;
+      background: var(--dark);
+      padding: 64px 52px 56px;
+      display: flex; align-items: flex-end;
+      position: relative; overflow: hidden;
+    }
+
+    /* watermark ₿ */
+    .btc-watermark {
+      position: absolute; right: -40px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 600px; font-weight: 900; line-height: 1;
+      color: rgba(247,147,26,0.04);
+      pointer-events: none; user-select: none;
+    }
+
+    .btc-content { max-width: 640px; position: relative; z-index: 1; }
+
+    .btc-stats {
+      display: flex; gap: 48px; margin-bottom: 48px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .bstat-value {
+      font-size: 32px; font-weight: 800; letter-spacing: -1px;
+      line-height: 1; color: var(--white);
+    }
+    .bstat-value.orange { color: var(--orange); }
+    .bstat-label {
+      font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.3);
+      margin-top: 7px; letter-spacing: 0.3px;
+    }
+    .btc-ctx {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 32px; flex-wrap: nowrap;
+    }
+    .btc-ctx-item {
+      font-size: 11px; font-weight: 500;
+      color: rgba(255,255,255,0.28); letter-spacing: 0.2px; white-space: nowrap;
+    }
+    .btc-ctx-item strong { font-weight: 700; color: rgba(255,255,255,0.45); }
+    .btc-ctx-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+    .btc-footnote { font-size: 10px; color: rgba(255,255,255,0.18); margin-top: 8px; margin-bottom: 24px; }
+
+    .btn-orange-solid {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600;
+      background: var(--orange); color: var(--white);
+      padding: 13px 24px; border-radius: 8px;
+      text-decoration: none; transition: opacity 0.15s;
+    }
+    .btn-orange-solid:hover { opacity: 0.88; }
+
+    .btn-ghost-dark {
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.4);
+      text-decoration: none; transition: color 0.15s, border-color 0.15s;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px; padding: 8px 16px;
+    }
+    .btn-ghost-dark:hover { color: var(--white); border-color: rgba(255,255,255,0.5); }
+
+    /* ─── FINANCIALS 3-CARD ─────────────────────────────────── */
+    .s-fin { background: #EFEFED; padding: 88px 52px; }
+
+    .fin3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .fin3-card {
+      background: var(--white); border-radius: 16px; padding: 32px;
+      display: flex; flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .fin3-title { font-size: 17px; font-weight: 800; color: var(--gray-9); margin-bottom: 14px; letter-spacing: -0.3px; }
+    .fin3-divider { height: 1px; background: var(--border); margin-bottom: 20px; }
+
+    .press-list { display: flex; flex-direction: column; gap: 0; }
+    .press-item { padding: 14px 0; border-bottom: 1px solid #F2F2F0; cursor: pointer; }
+    .press-item:first-child { padding-top: 0; }
+    .press-source { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--gray-4); margin-bottom: 5px; }
+    .press-headline { font-size: 13px; font-weight: 500; color: var(--gray-9); line-height: 1.5; transition: color 0.15s; }
+    .press-item:hover .press-headline { color: var(--pink); }
+
+    .fin3-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 0; border-bottom: 1px solid #F2F2F0;
+      color: var(--gray-6); font-size: 14px; text-decoration: none;
+      transition: color 0.15s;
+    }
+    .fin3-item:last-child { border-bottom: none; }
+    .fin3-item:hover { color: var(--pink); }
+    .fi-icon { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.45; transition: opacity 0.15s; }
+    .fin3-item:hover .fi-icon { opacity: 1; }
+
+    .news3-item { padding: 12px 0; border-bottom: 1px solid #F2F2F0; text-decoration: none; display: block; }
+    .news3-item:last-child { border-bottom: none; }
+    .news3-date { font-size: 11px; font-weight: 600; color: var(--gray-4); margin-bottom: 4px; letter-spacing: 0.5px; }
+    .news3-ttl  { font-size: 13px; color: var(--gray-9); line-height: 1.4; transition: color 0.15s; }
+    .news3-item:hover .news3-ttl { color: var(--pink); }
+
+    .cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .cal-month { font-size: 14px; font-weight: 700; color: var(--gray-9); }
+    .cal-navs { display: flex; gap: 4px; }
+    .cal-btn {
+      width: 26px; height: 26px; border: 1px solid var(--border);
+      border-radius: 6px; background: var(--white); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--gray-6); transition: all 0.15s;
+    }
+    .cal-btn:hover { border-color: var(--gray-9); color: var(--gray-9); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; margin-bottom: 16px; }
+    .cal-dh { font-size: 10px; font-weight: 700; color: var(--gray-4); text-align: center; padding: 6px 0 8px; }
+    .cal-d {
+      font-size: 12px; text-align: center;
+      height: 32px; display: flex; align-items: center; justify-content: center;
+      color: var(--gray-6); position: relative;
+    }
+    .cal-d.today { color: transparent; }
+    .today-pip {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--pink); color: var(--white);
+      font-size: 12px; font-weight: 800;
+    }
+    .cal-d.has-earn::after { content:''; position:absolute; bottom:2px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50%; background:var(--pink); }
+    .cal-d.has-conf::after { content:''; position:absolute; bottom:2px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50%; background:var(--gray-4); }
+    .cal-d.has-other::after{ content:''; position:absolute; bottom:2px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50%; background:var(--gray-9); }
+
+    .cal-legend { display: flex; flex-direction: column; gap: 7px; }
+    .cal-leg { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gray-6); }
+    .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .fin3-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .fin3-footer { padding-top: 28px; display: flex; justify-content: flex-end; }
+    .fin3-btn {
+      background: var(--pink); color: var(--white);
+      font-size: 13px; font-weight: 700; padding: 10px 24px;
+      border-radius: 30px; text-decoration: none; transition: opacity 0.15s;
+    }
+    .fin3-btn:hover { opacity: 0.85; }
+
+    /* keep sec-header/title for news section */
+    .sec-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 44px; }
+    .sec-title  { font-size: 34px; font-weight: 800; letter-spacing: -1px; color: var(--gray-9); }
+    .sec-link   { font-size: 13px; font-weight: 600; color: var(--pink); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: gap 0.15s; }
+    .sec-link:hover { gap: 10px; }
+
+    /* ─── NEWS ───────────────────────────────────────────────── */
+    .s-news {
+      background: var(--white);
+      padding: 88px 52px;
+      border-top: 1px solid var(--border);
+    }
+    .news-grid {
+      display: grid; grid-template-columns: 5fr 3fr 3fr; gap: 12px;
+      margin-top: 44px;
+    }
+    .news-card {
+      border: 1px solid var(--border); border-radius: 12px; padding: 32px;
+      cursor: pointer; transition: border-color 0.15s, transform 0.15s;
+    }
+    .news-card:hover { border-color: var(--gray-9); transform: translateY(-2px); }
+    .n-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--pink); margin-bottom: 14px;
+    }
+    .n-title {
+      font-size: 16px; font-weight: 700; color: var(--gray-9);
+      line-height: 1.35; margin-bottom: 18px;
+    }
+    .news-card.featured .n-title { font-size: 21px; }
+    .n-date { font-size: 12px; color: var(--gray-4); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      background: var(--dark);
+      padding: 72px 52px 80px; /* 80px bottom to clear ticker */
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 56px;
+      padding-bottom: 52px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 32px;
+    }
+    .f-logo { font-size: 20px; font-weight: 900; color: var(--white); }
+    .f-logo span { color: var(--pink); }
+    .f-desc { font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.7; margin-top: 14px; }
+    .f-col-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 18px;
+    }
+    .f-links { list-style: none; }
+    .f-links li { margin-bottom: 12px; }
+    .f-links a {
+      font-size: 13px; color: rgba(255,255,255,0.45);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .f-links a:hover { color: var(--white); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .f-copy { font-size: 12px; color: rgba(255,255,255,0.18); }
+    .f-disc { font-size: 11px; color: rgba(255,255,255,0.15); max-width: 440px; text-align: right; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<!-- ─── TICKER ──────────────────────────────────────────────── -->
+<div class="ticker">
+  <div class="ticker-item">
+    <span>CASH3 (B3)</span>
+    <strong>R$ 4,30</strong>
+    <span class="tick-down">−3,15%</span>
+  </div>
+  <div class="tick-sep"></div>
+  <div class="ticker-item">
+    <span>MLIZY (OTC)</span>
+    <strong>$ 1,82</strong>
+    <span class="tick-up">+1,39%</span>
+  </div>
+  <div class="tick-sep"></div>
+  <div class="ticker-item">
+    <span>Bitcoin</span>
+    <strong>$ 116.730</strong>
+    <span class="tick-up">+0,73%</span>
+  </div>
+</div>
+
+<!-- ─── NAV ─────────────────────────────────────────────────── -->
+<nav id="main-nav" class="on-pink">
+  <a href="#" class="nav-logo">méliuz<em class="logo-ri">RI</em></a>
+  <ul class="nav-links">
+    <li class="nav-item nav-has-dropdown">
+      <a href="#core" data-en="About Méliuz">Sobre o Méliuz</a>
+      <div class="nav-dropdown">
+        <a href="sobre/quem-somos.html" data-en="Who We Are &amp; Our History">Quem Somos e Nossa História</a>
+        <a href="sobre/cultura.html" data-en="Our Culture">Nossa Cultura</a>
+        <a href="sobre/imprensa.html" data-en="Méliuz in the Press">Méliuz na Imprensa</a>
+        <a href="sobre/glossario.html" data-en="Glossary">Glossário</a>
+        <a href="sobre/para-empresas-clientes.html" data-en="For Companies &amp; Users">Para Empresas e Usuários</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dropdown">
+      <a href="#btc">Bitcoin Treasury Strategy</a>
+      <div class="nav-dropdown">
+        <a href="bitcoin/estrategia.html" data-en="Our Strategy">Nossa Estratégia</a>
+        <a href="bitcoin/indicadores.html" data-en="BTC Indicators">Indicadores BTC</a>
+        <a href="bitcoin/faq-btc.html" data-en="Bitcoin Strategy Team">Equipe Estratégia Bitcoin</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dropdown">
+      <a href="#" data-en="Corporate Governance">Governança Corporativa</a>
+      <div class="nav-dropdown">
+        <a href="governanca/composicao-acionaria.html" data-en="Shareholder Structure">Composição Acionária</a>
+        <a href="governanca/administracao.html" data-en="Management">Administração</a>
+        <a href="governanca/estatuto.html" data-en="Bylaws &amp; Policies">Estatuto e Políticas</a>
+        <a href="governanca/assembleias.html" data-en="Meetings &amp; Assemblies">Assembleias e Reuniões</a>
+        <a href="governanca/informe.html" data-en="Governance Report">Informe de Governança</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dropdown">
+      <a href="#fin" data-en="Key Information">Principais Informações</a>
+      <div class="nav-dropdown">
+        <a href="resultados/central.html" data-en="Results Hub">Central de Resultados</a>
+        <a href="resultados/fatos-relevantes.html" data-en="Material Facts &amp; Disclosures">Fatos Relevantes e Comunicados</a>
+        <a href="resultados/avisos.html" data-en="Shareholder Notices">Avisos aos Acionistas</a>
+        <a href="apresentacoes/formulario-referencia.html" data-en="Reference Form">Formulário de Referência</a>
+        <a href="resultados/valores-mobiliarios.html" data-en="Securities">Valores Mobiliários</a>
+        <a href="apresentacoes/apresentacoes.html" data-en="Presentations">Apresentações</a>
+        <a href="resultados/outros.html" data-en="Other Documents">Outros Documentos</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dropdown">
+      <a href="#news" data-en="Investor Services">Serviços ao Investidor</a>
+      <div class="nav-dropdown">
+        <a href="servicos/mailing.html" data-en="Join the Mailing List">Cadastre-se no Mailing</a>
+        <a href="servicos/contato.html" data-en="Contact Us">Fale Conosco</a>
+        <a href="apresentacoes/calendario.html" data-en="Events Calendar">Calendário de Eventos</a>
+        <a href="servicos/cobertura-analistas.html" data-en="Analyst Coverage">Cobertura de Analistas</a>
+        <a href="servicos/faq.html" data-en="FAQ">Perguntas Frequentes</a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="nav-lang">PT · EN</a>
+    <a href="servicos/contato.html" class="nav-cta" data-en="IR Contact">Contato RI</a>
+  </div>
+</nav>
+
+<!-- ─── SIDE DOTS ────────────────────────────────────────────── -->
+<div class="side-dots" id="side-dots">
+  <div class="sdot active-pink" id="dot-1" onclick="document.getElementById('core').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sdot" id="dot-2" onclick="document.getElementById('btc').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sdot" id="dot-3" onclick="document.getElementById('fin').scrollIntoView({behavior:'smooth'})"></div>
+</div>
+
+<!-- ─── SECTION 1: CORE BUSINESS ────────────────────────────── -->
+<section class="s-core" id="core">
+  <div class="core-circle"></div>
+  <div class="core-circle-2"></div>
+
+  <!-- LEFT -->
+  <div class="core-left">
+    <span class="s-tag tag-white">Core Business</span>
+
+    <h1 class="s-title" data-en="Brazil's Best Loyalty Platform">A melhor plataforma de loyalty do Brasil</h1>
+    <p class="s-sub" data-en="We drive sales for partners and<br>generate real benefits for users.">Impulsionamos vendas para parceiros e<br>geramos benefícios reais para usuários.</p>
+
+    <div class="s-ctas">
+      <a href="resultados/central.html" class="btn-white" data-en="Financial Results →">Resultados Financeiros →</a>
+      <a href="servicos/mailing.html" class="btn-outline-white" data-en="Join the mailing list">Cadastre-se no mailing</a>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-hint-arrow">↓</div>
+      <span data-en="Bitcoin Treasury">Bitcoin Treasury</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: floating composition -->
+  <div class="core-right">
+    <div class="app-comp" id="app-comp">
+
+      <!-- phone secundário (atrás) -->
+      <div class="phone-sec-wrap" id="phone-sec">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <img src="images/fundo.png" alt="Méliuz app" />
+          </div>
+        </div>
+      </div>
+
+      <!-- phone principal (frente) -->
+      <div class="phone-main-wrap" id="phone-main">
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <!-- vídeo do app -->
+              <video
+                id="app-video"
+                class="phone-video"
+                autoplay loop muted playsinline
+                poster="images/0.png?v=1">
+                <source src="videos/app-novo.mov" type="video/quicktime" />
+                <source src="videos/app.mp4" type="video/mp4" />
+              </video>
+              <!-- fallback estático (aparece se o vídeo não carregar) -->
+              <div class="phone-fallback" id="phone-fallback" style="display:none">
+                <img class="phone-base-img" src="images/0.png?v=1" alt="Méliuz app" />
+                <div class="banner-cycle">
+                  <div class="bcycle-slide active" id="bs-0"><img src="images/0.png?v=1" alt="" /></div>
+                  <div class="bcycle-slide" id="bs-1"><img src="images/1.png?v=3" alt="" /></div>
+                  <div class="bcycle-slide" id="bs-2"><img src="images/2.png?v=3" alt="" /></div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-dots" id="phone-dots-wrap">
+              <div class="pdot active" id="pdot-0"></div>
+              <div class="pdot" id="pdot-1"></div>
+              <div class="pdot" id="pdot-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- card 0: produto — esquerda -->
+      <div class="card-anchor ca-0" id="ca-0" data-depth="1.8">
+        <div class="comp-card cc-0">
+          <div class="cc-prod-img">
+            <img src="images/prod-0.png" alt="" onerror="this.parentNode.innerHTML='👟'" />
+          </div>
+          <div class="cc-brand">Nike</div>
+          <div class="cc-name" data-en="Air Max 270<br>Men's">Tênis Air Max 270<br>Masculino</div>
+          <div class="cc-price">R$ 599,99</div>
+          <div class="cc-row">
+            <span class="cc-badge">12% cashback</span>
+            <span class="cc-cta-sm" data-en="Activate →">Ativar →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- card 1: promo — topo direita -->
+      <div class="card-anchor ca-1" id="ca-1" data-depth="2.3">
+        <div class="comp-card cc-1">
+          <div class="cc-1-grad">
+            <div class="cc-1-tag" data-en="featured">em destaque</div>
+            <div class="cc-1-name" data-en="Perfumery<br>&amp; Beauty">Perfumaria<br>& Beleza</div>
+          </div>
+          <div class="cc-1-body">
+            <div class="cc-1-pct">15%</div>
+            <div class="cc-1-sub" data-en="cashback<br>guaranteed">de cashback<br>garantido</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- card 2: big % — baixo direita -->
+      <div class="card-anchor ca-2" id="ca-2" data-depth="1.5">
+        <div class="comp-card cc-2">
+          <div class="cc-2-icon">🏃</div>
+          <div class="cc-2-store">Centauro</div>
+          <div class="cc-2-pct">14%</div>
+          <div class="cc-2-label">cashback</div>
+        </div>
+      </div>
+
+      <!-- card 3: cashback confirmado -->
+      <div class="card-anchor ca-3" id="ca-3" data-depth="1.2">
+        <div class="comp-card cc-3">
+          <div class="cc-3-body">
+            <div class="cc-3-amount">R$ 213,49</div>
+            <div class="cc-3-label" data-en="Cashback confirmed">Cashback confirmado</div>
+          </div>
+          <div class="cc-3-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── BRIDGE ────────────────────────────────────────────────  -->
+<div class="s-bridge">
+  <span class="bridge-text" data-en="Core Business">Core Business</span>
+  <div class="bridge-line"></div>
+  <span class="bridge-text" data-en="Bitcoin Treasury">Bitcoin Treasury</span>
+</div>
+
+<!-- ─── SECTION 2: BITCOIN TREASURY ─────────────────────────── -->
+<section class="s-btc" id="btc">
+  <div class="btc-watermark">₿</div>
+
+  <div class="btc-content">
+    <span class="s-tag tag-orange-soft">Bitcoin Treasury Company</span>
+
+    <h2 class="s-title" data-en="A Bitcoin<br>Treasury Company.">
+      <span class="muted" data-en="A">Uma</span> Bitcoin<br>
+      Treasury Company.
+    </h2>
+
+    <p class="s-sub" style="color:rgba(255,255,255,0.45)" data-en="With operational cash generation and a zero-debt capital structure. The first Bitcoin Treasury Company in Brazil and Latin America.">
+      Com geração de caixa operacional e estrutura de capital sem dívida. A primeira Bitcoin Treasury Company do Brasil e da América Latina.
+    </p>
+
+    <div class="btc-ctx">
+      <span class="btc-ctx-item" data-en="<strong>+25%</strong> revenue YoY"><strong>+25%</strong> receita YoY</span>
+      <span class="btc-ctx-sep"></span>
+      <span class="btc-ctx-item" data-en="<strong>+R$105M</strong> Adjusted EBITDA 1Q26 LTM"><strong>+R$105M</strong> EBITDA ajustado no 1T26 LTM</span>
+      <span class="btc-ctx-sep"></span>
+      <span class="btc-ctx-item" data-en="<strong>Zero</strong> debt"><strong>Zero</strong> dívida</span>
+      <span class="btc-ctx-sep"></span>
+      <span class="btc-ctx-item" data-en="<strong>7th</strong> most downloaded app in Brazil<sup>*</sup>"><strong>7°</strong> app mais baixado no Brasil<sup>*</sup></span>
+      <span class="btc-ctx-sep"></span>
+      <span class="btc-ctx-item" data-en="<strong>+45M</strong> users"><strong>+45M</strong> usuários</span>
+    </div>
+
+    <div class="btc-stats">
+      <div>
+        <div class="bstat-value orange">604,69 BTC</div>
+        <div class="bstat-label" data-en="Treasury position">Posição em tesouraria</div>
+      </div>
+    </div>
+
+    <div class="s-ctas">
+      <a href="bitcoin/estrategia.html" class="btn-orange-solid" data-en="Our BTC Strategy →">Nossa estratégia BTC →</a>
+      <a href="bitcoin/indicadores.html" class="btn-ghost-dark" data-en="Bitcoin Treasury Company Indicators ↗">Indicadores Bitcoin Treasury Company ↗</a>
+    </div>
+
+    <p class="btc-footnote" data-en="* In the retail category per SENSOR TOWER report. State of Mobile 2026.">* Na categoria de varejo conforme relatório SENSOR TOWER. State of Mobile 2026.</p>
+  </div>
+</section>
+
+<!-- ─── FINANCIALS ────────────────────────────────────────────── -->
+<section class="s-fin" id="fin">
+  <div class="fin3-grid">
+
+    <!-- CARD 1: Resultados 1T26 -->
+    <div class="fin3-card">
+      <div class="fin3-title" data-en="1Q26 Results">Resultados do 1T26</div>
+      <div class="fin3-divider"></div>
+
+      <div class="fin3-body">
+        <a href="#" class="fin3-item">
+          <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Earnings Release
+        </a>
+        <a href="#" class="fin3-item">
+          <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span data-en="Financial Statements">Demonstrações Financeiras</span>
+        </a>
+        <a href="#" class="fin3-item">
+          <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span data-en="Excel Spreadsheet">Planilha Excel</span>
+        </a>
+        <a href="#" class="fin3-item">
+          <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          Webcast
+        </a>
+        <a href="#" class="fin3-item">
+          <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span data-en="Webcast Presentation">Apresentação do Webcast</span>
+        </a>
+        <a href="#" class="fin3-item">
+          <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+          <span data-en="Webcast Transcript">Transcrição do Webcast</span>
+        </a>
+      </div>
+
+      <div class="fin3-footer"><a href="resultados/central.html" class="fin3-btn" data-en="See More">Ver Mais</a></div>
+    </div>
+
+    <!-- CARD 2: Últimas Notícias -->
+    <div class="fin3-card">
+      <div class="fin3-title" data-en="Latest Announcements">Últimos Comunicados</div>
+      <div class="fin3-divider"></div>
+
+      <div class="fin3-body">
+        <a href="#" class="news3-item">
+          <div class="news3-date" data-en="May 11, 2026">11 Mai, 2026</div>
+          <div class="news3-ttl" data-en="1Q26 Earnings Release Schedule">Agenda de Divulgação de Resultados do 1T26</div>
+        </a>
+        <a href="#" class="news3-item">
+          <div class="news3-date" data-en="May 04, 2026">04 Mai, 2026</div>
+          <div class="news3-ttl" data-en="Méliuz buys back R$ 30 million in shares in six months and generates 6.9% Bitcoin Yield in the period">Méliuz recompra R$ 30 milhões em ações em seis meses e gera 6,9% de Bitcoin Yield no período</div>
+        </a>
+        <a href="#" class="news3-item">
+          <div class="news3-date" data-en="Apr 30, 2026">30 Abr, 2026</div>
+          <div class="news3-ttl" data-en="Méliuz reports increase in relevant shareholding">Méliuz informa aumento de participação acionária relevante</div>
+        </a>
+        <a href="#" class="news3-item">
+          <div class="news3-date" data-en="Feb 23, 2026">23 Fev, 2026</div>
+          <div class="news3-ttl" data-en="Méliuz generates 4.38% Bitcoin Yield with share buyback program">Méliuz gera 4,38% de Bitcoin Yield com programa de recompra de ações</div>
+        </a>
+      </div>
+
+      <div class="fin3-footer"><a href="resultados/fatos-relevantes.html" class="fin3-btn" data-en="See More">Ver Mais</a></div>
+    </div>
+
+    <!-- CARD 3: Méliuz na Imprensa -->
+    <div class="fin3-card">
+      <div class="fin3-title" data-en="Méliuz in the Press">Méliuz na Imprensa</div>
+      <div class="fin3-divider"></div>
+
+      <div class="fin3-body press-list">
+        <div class="press-item">
+          <div class="press-source" data-en="MoneyTimes · May 06, 2026">MoneyTimes · 06 Mai, 2026</div>
+          <div class="press-headline" data-en="UBS BB sees Méliuz (CASH3) as 'undervalued' and sees upside potential of nearly 40%">UBS BB enxerga Méliuz (CASH3) 'subvalorizado' e vê potencial de alta de quase 40%</div>
+        </div>
+        <div class="press-item">
+          <div class="press-source" data-en="BM&amp;C News · Dec 2025">BM&amp;C News · Dez 2025</div>
+          <div class="press-headline" data-en="Genial recommends buying Méliuz with 130% upside">Genial recomenda compra de Méliuz com valorização de 130%</div>
+        </div>
+        <div class="press-item">
+          <div class="press-source" data-en="InfoMoney · Nov 2025">InfoMoney · Nov 2025</div>
+          <div class="press-headline" data-en="Méliuz (CASH3) earns R$ 14.2M in Q3, up 61% year-over-year">Méliuz (CASH3) lucra R$ 14,2 mi no 3º tri, alta anual de 61%</div>
+        </div>
+        <div class="press-item">
+          <div class="press-source" data-en="Valor Econômico · Oct 2025">Valor Econômico · Out 2025</div>
+          <div class="press-headline" data-en="Méliuz expands Bitcoin reserve and consolidates treasury strategy in Brazil">Méliuz amplia reserva de Bitcoin e consolida estratégia de treasury no Brasil</div>
+        </div>
+      </div>
+
+      <div class="fin3-footer"><a href="sobre/imprensa.html" class="fin3-btn" data-en="See all coverage →">Ver toda a cobertura →</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="f-logo">méliuz</div>
+      <p class="f-desc" data-en="Investor Relations<br>B3: CASH3 · Brazil<br>OTC: MLIZY · United States<br><br>ri@meliuz.com.br">
+        Relações com Investidores<br>
+        B3: CASH3 · Brasil<br>
+        OTC: MLIZY · Estados Unidos<br><br>
+        ri@meliuz.com.br
+      </p>
+    </div>
+    <div>
+      <div class="f-col-title">Core Business</div>
+      <ul class="f-links">
+        <li><a href="sobre/quem-somos.html" data-en="About the Business">Sobre o Negócio</a></li>
+        <li><a href="sobre/cultura.html" data-en="Our Culture">Nossa Cultura</a></li>
+        <li><a href="sobre/para-empresas-clientes.html" data-en="For Companies &amp; Users">Para Empresas e Usuários</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-title">Bitcoin Treasury</div>
+      <ul class="f-links">
+        <li><a href="bitcoin/estrategia.html" data-en="Our Strategy">Nossa Estratégia</a></li>
+        <li><a href="bitcoin/indicadores.html" data-en="Indicators">Indicadores</a></li>
+        <li><a href="bitcoin/faq-btc.html" data-en="BTC Strategy Team">Equipe Estratégia BTC</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-title" data-en="Investors">Investidores</div>
+      <ul class="f-links">
+        <li><a href="resultados/central.html" data-en="Results">Resultados</a></li>
+        <li><a href="servicos/contato.html" data-en="IR Contact">Contato RI</a></li>
+        <li><a href="apresentacoes/calendario.html" data-en="Events Calendar">Calendário de Eventos</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="f-copy" data-en="© 2025 Méliuz S.A. All rights reserved.">© 2025 Méliuz S.A. Todos os direitos reservados.</div>
+    <div class="f-disc" data-en="The information on this website is for informational purposes only and does not constitute an offer of securities.">As informações deste site têm caráter meramente informativo e não constituem oferta de valores mobiliários.</div>
+  </div>
+</footer>
+
+<!-- ─── JS: nav + dots ────────────────────────────────────────── -->
+<script>
+  /* ── 3D tilt + parallax ── */
+  (function() {
+    const coreEl   = document.getElementById('core');
+    const phoneMain = document.getElementById('phone-main');
+    const phoneSec  = document.getElementById('phone-sec');
+    const anchors   = [
+      document.getElementById('ca-0'),
+      document.getElementById('ca-1'),
+      document.getElementById('ca-2'),
+      document.getElementById('ca-3'),
+    ];
+    let tx = 0, ty = 0, cx = 0, cy = 0, on = false;
+
+    coreEl.addEventListener('mousemove', e => {
+      const r = coreEl.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width  - 0.5;
+      ty = (e.clientY - r.top)  / r.height - 0.5;
+      on = true;
+    });
+    coreEl.addEventListener('mouseleave', () => { on = false; });
+
+    (function loop() {
+      cx += ((on ? tx : 0) - cx) * 0.07;
+      cy += ((on ? ty : 0) - cy) * 0.07;
+
+      const rotY = cx * 7;
+      const rotX = -cy * 5;
+
+      if (phoneMain) phoneMain.style.transform =
+        `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      if (phoneSec) phoneSec.style.transform =
+        `perspective(900px) rotateX(${rotX * 0.5}deg) rotateY(${rotY * 0.5}deg)`;
+
+      anchors.forEach(a => {
+        if (!a) return;
+        const d = parseFloat(a.dataset.depth) || 1;
+        a.style.transform = `translate(${cx * d * 8}px, ${cy * d * 8}px)`;
+      });
+
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  /* ── video fallback: se não carregar, mostra screenshots ── */
+  (function() {
+    const vid      = document.getElementById('app-video');
+    const fallback = document.getElementById('phone-fallback');
+    const dots     = document.getElementById('phone-dots-wrap');
+    if (!vid) return;
+
+    function showFallback() {
+      vid.style.display      = 'none';
+      fallback.style.display = 'block';
+      if (dots) dots.style.display = 'flex';
+    }
+
+    vid.addEventListener('error', showFallback);
+    // se após 3s o vídeo ainda não começou a tocar, exibe fallback
+    setTimeout(() => {
+      if (vid.readyState < 2) showFallback();
+    }, 3000);
+
+    // quando vídeo carrega: esconde os dots (não fazem sentido com vídeo)
+    vid.addEventListener('playing', () => {
+      if (dots) dots.style.display = 'none';
+    });
+  })();
+
+  /* ── banner cycle (rest of screen stays static) ── */
+  const bSlides = [
+    document.getElementById('bs-0'),
+    document.getElementById('bs-1'),
+    document.getElementById('bs-2'),
+  ];
+  const pdots = [
+    document.getElementById('pdot-0'),
+    document.getElementById('pdot-1'),
+    document.getElementById('pdot-2'),
+  ];
+  let bCur = 0;
+
+  setInterval(() => {
+    bSlides[bCur].classList.remove('active');
+    pdots[bCur].classList.remove('active');
+    bCur = (bCur + 1) % bSlides.length;
+    bSlides[bCur].classList.add('active');
+    pdots[bCur].classList.add('active');
+  }, 2800);
+
+  const nav   = document.getElementById('main-nav');
+  const dot1  = document.getElementById('dot-1');
+  const dot2  = document.getElementById('dot-2');
+  const dot3  = document.getElementById('dot-3');
+  const secCore = document.getElementById('core');
+  const secBtc  = document.getElementById('btc');
+  const secFin  = document.getElementById('fin');
+
+  function update() {
+    const scrollY = window.scrollY;
+    const coreTop = secCore.offsetTop;
+    const btcTop  = secBtc.offsetTop;
+    const finTop  = secFin.offsetTop;
+
+    // nav style
+    if (scrollY < btcTop - 80) {
+      nav.className = 'on-pink';
+    } else if (scrollY < finTop - 80) {
+      nav.className = 'dark';
+    } else {
+      nav.className = 'light';
+    }
+
+    // side dots
+    if (scrollY < btcTop - 200) {
+      dot1.className = 'sdot active-pink';
+      dot2.className = 'sdot';
+      dot3.className = 'sdot';
+    } else if (scrollY < finTop - 200) {
+      dot1.className = 'sdot';
+      dot2.className = 'sdot active-orange';
+      dot3.className = 'sdot';
+    } else {
+      dot1.className = 'sdot';
+      dot2.className = 'sdot';
+      dot3.className = 'sdot active-dark';
+    }
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     POPUP DE DESTAQUE — edite o conteúdo abaixo para alterar a mensagem
+     Para desativar: comente ou remova o bloco <div id="popup-overlay">
+     ═══════════════════════════════════════════════════════════════ -->
+<div id="popup-overlay">
+  <div id="popup-card">
+    <button id="popup-close" aria-label="Fechar">✕</button>
+
+    <!-- BADGE (opcional — apague a linha se não quiser) -->
+    <div class="popup-badge" data-en="Earnings Calendar">Agenda de Resultados</div>
+
+    <!-- TÍTULO -->
+    <h2 class="popup-title" data-en="1Q26 Results">Resultados 1T26</h2>
+
+    <!-- MENSAGEM -->
+    <div class="popup-body">
+      <div class="popup-event">
+        <p class="popup-event-label" data-en="1Q26 Earnings Release">Divulgação de Resultados 1T26</p>
+        <p data-en="<strong>May 14, 2026</strong><br>(after market close)">Dia <strong>14 de maio de 2026</strong><br>(após o fechamento do mercado)</p>
+      </div>
+      <div class="popup-event">
+        <p class="popup-event-label" data-en="Earnings Webcast">Webcast de Resultados</p>
+        <p data-en="<strong>May 15, 2026</strong><br>Time: <strong>11:00 AM (BRT)</strong>">Dia <strong>15 de maio de 2026</strong><br>Horário: <strong>11h00 (BRT)</strong></p>
+      </div>
+      <div class="popup-event popup-extra">
+        <p data-en="After the webcast, we will have our <strong>X Chat</strong> at 12:30 PM — we look forward to seeing you! <a href=&quot;#&quot; class=&quot;popup-link&quot;>click here to access</a>.">Após o webcast, teremos nosso <strong>Bate Papo no X</strong>, às 12h30 — aguardamos vocês! <a href="#" class="popup-link">clique aqui para acessar</a>.</p>
+      </div>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="popup-actions">
+      <a href="#" class="popup-btn-primary" data-en="Access the Webcast →">Acessar o Webcast →</a>
+      <button id="popup-dismiss" class="popup-btn-ghost" data-en="Close">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  #popup-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; animation: popupFadeIn 0.3s 0.5s ease forwards;
+  }
+  @keyframes popupFadeIn {
+    to { opacity: 1; }
+  }
+  #popup-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 44px;
+    max-width: 520px;
+    width: 100%;
+    position: relative;
+    transform: translateY(12px);
+    animation: popupSlideUp 0.3s 0.5s ease forwards;
+    opacity: 0;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.2);
+  }
+  @keyframes popupSlideUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+  #popup-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; font-size: 18px;
+    color: #AAAAAA; cursor: pointer; line-height: 1;
+    transition: color 0.15s;
+  }
+  #popup-close:hover { color: #111; }
+  .popup-badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: #fd9cbf;
+    background: #fff0f6; padding: 4px 10px; border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  .popup-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+    color: #111; line-height: 1.2; margin-bottom: 14px;
+  }
+  .popup-body { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 28px; }
+  .popup-event { padding: 14px 0; border-bottom: 1px solid #E8E8E8; }
+  .popup-event:first-child { padding-top: 0; }
+  .popup-event-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 4px; }
+  .popup-extra { border-bottom: none; padding-bottom: 0; }
+  .popup-link { color: #fd9cbf; font-weight: 600; text-decoration: underline; }
+  .popup-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .popup-btn-primary {
+    background: #111; color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 11px 22px; border-radius: 30px;
+    text-decoration: none; transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .popup-btn-primary:hover { opacity: 0.75; }
+  .popup-btn-ghost {
+    background: none; border: 1.5px solid #E8E8E8;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600; color: #666;
+    padding: 11px 22px; border-radius: 30px;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .popup-btn-ghost:hover { border-color: #111; color: #111; }
+</style>
+
+<script>
+  (function() {
+    const overlay = document.getElementById('popup-overlay');
+    if (!overlay) return;
+
+    // Não mostrar novamente na mesma sessão
+    if (sessionStorage.getItem('popup-1t26')) {
+      overlay.remove();
+      return;
+    }
+
+    function dismiss() {
+      overlay.style.transition = 'opacity 0.2s';
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.remove(), 200);
+      sessionStorage.setItem('popup-1t26', '1');
+    }
+
+    document.getElementById('popup-close').addEventListener('click', dismiss);
+    document.getElementById('popup-dismiss').addEventListener('click', dismiss);
+    overlay.addEventListener('click', e => { if (e.target === overlay) dismiss(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') dismiss(); });
+  })();
+</script>
+
+<script src="js/lang.js"></script>
+</body>
+</html>

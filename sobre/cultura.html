@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nossa Cultura — Méliuz RI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #fd9cbf; --pink-d: #fd9cbf; --dark: #111;
+      --white: #fff; --off: #F6F6F4; --border: #E8E8E8;
+      --g4: #AAAAAA; --g6: #666; --g9: #111; --radius: 24px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; color: var(--g9); background: var(--white); -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 52px; background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 20px; font-weight: 900; color: var(--g9); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--pink-d); }
+    .logo-ri { font-style: normal; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; opacity: 0.45; margin-left: 1px; vertical-align: baseline; }
+    .nav-links { display: flex; gap: 20px; list-style: none; }
+    .nav-links > li > a { font-size: 12.5px; font-weight: 500; color: var(--g6); text-decoration: none; transition: color 0.15s; white-space: nowrap; }
+    .nav-links > li > a:hover { color: var(--g9); }
+    .nav-item { position: relative; }
+    .nav-item:hover .nav-dd { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-item::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 20px; }
+    .nav-has-dd > a::after { content: ' ↓'; font-size: 10px; opacity: 0.4; }
+    .nav-dd {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 16px; padding: 8px; min-width: 220px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+      opacity: 0; pointer-events: none; transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s; z-index: 300;
+    }
+    .nav-dd a { display: block; padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--g6); text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+    .nav-dd a:hover { color: var(--g9); }
+    .nav-dd a.active { color: var(--pink-d); font-weight: 700; background: #fff0f6; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-lang { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; color: var(--g4); text-decoration: none; }
+    .nav-cta { font-size: 13px; font-weight: 600; color: var(--white); background: var(--g9); padding: 9px 20px; border-radius: 30px; text-decoration: none; transition: opacity 0.15s; }
+    .nav-cta:hover { opacity: 0.8; }
+    .nav-item.nav-active > a { color: var(--g9) !important; font-weight: 700; }
+
+
+    .page-header { padding: 72px 52px 64px; border-bottom: 1px solid var(--border); }
+    .ph-section { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--g4); margin-bottom: 14px; }
+    .ph-title { font-size: clamp(36px, 4.5vw, 56px); font-weight: 900; letter-spacing: -2px; line-height: 1.0; color: var(--g9); margin-bottom: 20px; }
+    .ph-desc { font-size: 16px; color: var(--g6); line-height: 1.65; max-width: 560px; }
+
+    .section-content { padding: 56px 52px; flex: 1; }
+
+    .page-footer { background: var(--dark); padding: 32px 52px; display: flex; align-items: center; justify-content: space-between; }
+    .pf-logo { font-size: 18px; font-weight: 900; color: var(--white); letter-spacing: -0.5px; }
+    .pf-logo span { color: var(--pink); }
+    .pf-back { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.15s; }
+    .pf-back:hover { color: var(--white); }
+
+    /* Intro */
+    .section-intro {
+      padding: 80px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .si-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .si-title {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.4px;
+      color: var(--g9); margin-bottom: 36px;
+    }
+    .si-body { font-size: 17px; color: var(--g6); line-height: 1.85; }
+    .si-body p + p { margin-top: 22px; }
+
+    /* Page-specific styles */
+    .values-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      padding: 80px 52px;
+    }
+    .values-left-title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--g9);
+      position: sticky;
+      top: 84px;
+    }
+    .value-item {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+    }
+    .value-item:first-child { border-top: none; }
+    .value-item:last-child { border-bottom: none; }
+    .value-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--g9);
+      margin-bottom: 8px;
+    }
+    .value-desc {
+      font-size: 14px;
+      color: var(--g6);
+      line-height: 1.6;
+    }
+
+    .how-section {
+      padding: 80px 52px;
+      border-top: 1px solid var(--border);
+    }
+    .how-title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--g9);
+      margin-bottom: 36px;
+    }
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .how-card {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+    }
+    .how-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--g9);
+      margin-bottom: 12px;
+    }
+    .how-card-desc {
+      font-size: 14px;
+      color: var(--g6);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">méliuz<em class="logo-ri">RI</em></a>
+  <ul class="nav-links">
+    <li class="nav-item nav-has-dd nav-active">
+      <a href="#" data-en="About Méliuz">Sobre o Méliuz</a>
+      <div class="nav-dd">
+        <a href="../sobre/quem-somos.html" data-en="Who We Are &amp; Our History">Quem Somos e Nossa História</a>
+        <a href="../sobre/cultura.html" class="active" data-en="Our Culture">Nossa Cultura</a>
+        <a href="../sobre/imprensa.html" data-en="Méliuz in the Press">Méliuz na Imprensa</a>
+        <a href="../sobre/glossario.html" data-en="Glossary">Glossário</a>
+        <a href="../sobre/para-empresas-clientes.html" data-en="For Companies &amp; Users">Para Empresas e Usuários</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="../index.html#btc">Bitcoin Treasury Strategy</a>
+      <div class="nav-dd">
+        <a href="../bitcoin/estrategia.html" data-en="Our Strategy">Nossa Estratégia</a>
+        <a href="../bitcoin/indicadores.html" data-en="BTC Indicators">Indicadores BTC</a>
+        <a href="../bitcoin/faq-btc.html" data-en="Bitcoin Strategy Team">Equipe Estratégia Bitcoin</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="#" data-en="Corporate Governance">Governança Corporativa</a>
+      <div class="nav-dd">
+        <a href="../governanca/composicao-acionaria.html" data-en="Shareholder Structure">Composição Acionária</a>
+        <a href="../governanca/administracao.html" data-en="Management">Administração</a>
+        <a href="../governanca/estatuto.html" data-en="Bylaws &amp; Policies">Estatuto e Políticas</a>
+        <a href="../governanca/assembleias.html" data-en="Meetings &amp; Assemblies">Assembleias e Reuniões</a>
+        <a href="../governanca/informe.html" data-en="Governance Report">Informe de Governança</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="#" data-en="Key Information">Principais Informações</a>
+      <div class="nav-dd">
+        <a href="../resultados/central.html" data-en="Results Hub">Central de Resultados</a>
+        <a href="../resultados/fatos-relevantes.html" data-en="Material Facts &amp; Disclosures">Fatos Relevantes e Comunicados</a>
+        <a href="../resultados/avisos.html" data-en="Shareholder Notices">Avisos aos Acionistas</a>
+        <a href="../apresentacoes/formulario-referencia.html" data-en="Reference Form">Formulário de Referência</a>
+        <a href="../resultados/valores-mobiliarios.html" data-en="Securities">Valores Mobiliários</a>
+        <a href="../apresentacoes/apresentacoes.html" data-en="Presentations">Apresentações</a>
+        <a href="../resultados/outros.html" data-en="Other Documents">Outros Documentos</a>
+      </div>
+    </li>
+    <li class="nav-item nav-has-dd">
+      <a href="#" data-en="Investor Services">Serviços ao Investidor</a>
+      <div class="nav-dd">
+        <a href="../servicos/mailing.html" data-en="Join the Mailing List">Cadastre-se no Mailing</a>
+        <a href="../servicos/contato.html" data-en="Contact Us">Fale Conosco</a>
+        <a href="../apresentacoes/calendario.html" data-en="Events Calendar">Calendário de Eventos</a>
+        <a href="../servicos/cobertura-analistas.html" data-en="Analyst Coverage">Cobertura de Analistas</a>
+        <a href="../servicos/faq.html" data-en="FAQ">Perguntas Frequentes</a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="nav-lang">PT · EN</a>
+    <a href="../servicos/contato.html" class="nav-cta" data-en="IR Contact">Contato RI</a>
+  </div>
+</nav>
+
+<section class="section-intro">
+  <div class="si-inner">
+    <h1 class="si-title" data-en="Our Culture">Nossa Cultura</h1>
+    <div class="si-body">
+      <p data-en="More than values and principles, our culture represents our essence. It is what makes us feel at home and what guides us in choosing who will join our great family. This is only possible because it was built as a reflection of the way we worked and made decisions, since the early years of Méliuz.">Mais do que valores e princípios, a nossa cultura representa a nossa essência. É o que nos faz sentir em casa e o que nos orienta a escolher quem vai entrar para a nossa grande família. Isso só é possível porque ela foi sendo construída como reflexo da maneira com que trabalhávamos e tomávamos decisões, desde os primeiros anos do Méliuz.</p>
+      <p data-en="Our culture is lived in our day-to-day, in our actions and by everyone who is part of Méliuz. Our team is always very well aligned with our purposes and objectives, with the aim of generating more and more value for users, partners, and our shareholders.">A nossa cultura é vivenciada no nosso dia-a-dia, nas nossas ações e por cada um que faz parte do Méliuz. Nosso time está sempre muito bem alinhado com nossos propósitos e objetivos, com intuito de gerar cada vez mais valor aos usuários, aos parceiros e aos nossos acionistas.</p>
+      <p data-en="We got here with few employees, but with an exceptional team that shares similar goals to ours. The culture is not in Méliuz — it is in each person on the team. The people on our team are responsible for maintaining this culture and for being multipliers of our most important pillar for new members.">Chegamos até aqui com poucos colaboradores, mas com um time fora da curva que tem objetivos semelhantes aos nossos. A cultura não está no Méliuz, está em cada pessoa do time. As pessoas do nosso time são responsáveis pela manutenção dessa cultura e por serem multiplicadores do nosso mais importante pilar para os novos entrantes.</p>
+      <p data-en="We are Méliuz. A technology company, with an exceptional team and a unique culture!">Somos Méliuz. Uma empresa de tecnologia, com um time fora da curva e com uma cultura única!</p>
+    </div>
+  </div>
+</section>
+
+<section class="values-section">
+  <div class="values-left">
+    <h2 class="values-left-title" data-en="Our Culture Points">Nossos Pontos de Cultura</h2>
+  </div>
+  <div class="values-right">
+    <div class="value-item">
+      <div class="value-title" data-en="Customers for Life">Clientes Para Vida Toda</div>
+      <div class="value-desc" data-en="We are committed to building long-term relationships with our customers, including users and partners. To achieve this, we seek to offer products and services that generate real value, with a simple, efficient, and reliable experience. Everyone at Méliuz is responsible for caring for our customers with attention, respect, and excellence, always striving to exceed expectations and strengthen trust in the Company.">Somos comprometidos em construir relações de longo prazo com nossos clientes, incluindo usuários e parceiros. Para isso, buscamos oferecer produtos e serviços que gerem valor real, com uma experiência simples, eficiente e confiável. Todos no Méliuz são responsáveis por cuidar dos nossos clientes com atenção, respeito e excelência, sempre buscando superar expectativas e fortalecer a confiança na Companhia.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-title" data-en="Win-Win-Win">Ganha-Ganha-Ganha</div>
+      <div class="value-desc" data-en="We believe that sustainable relationships are built when everyone involved benefits. Our model seeks to generate value for users, partners, employees, shareholders, and investors. For us, the growth of Méliuz must be aligned with the generation of real benefits for users, efficiency for partners, and financial sustainability for the Company.">Acreditamos que relações sustentáveis são construídas quando todos os envolvidos se beneficiam. Nosso modelo busca gerar valor para usuários, parceiros, colaboradores, acionistas e investidores. Para nós, o crescimento do Méliuz deve estar alinhado à geração de benefícios reais para os usuários, eficiência para os parceiros e sustentabilidade financeira para a Companhia.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-title" data-en="Exceptional Team">Equipe Fora Da Curva</div>
+      <div class="value-desc" data-en="We value people with a sense of urgency, responsibility, and a willingness to learn continuously. We seek self-taught, collaborative professionals committed to excellence, who share knowledge and contribute to raising the team's standards. We believe that strong teams are formed by people who combine ambition, discipline, intelligence, and the ability to execute.">Valorizamos pessoas com senso de urgência, responsabilidade e vontade de aprender continuamente. Buscamos profissionais autodidatas, colaborativos e comprometidos com a excelência, que compartilham conhecimento e contribuem para elevar o padrão do time. Acreditamos que equipes fortes são formadas por pessoas que combinam ambição, disciplina, inteligência e capacidade de execução.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-title" data-en="Entrepreneurial Spirit">Espírito Empreendedor</div>
+      <div class="value-desc" data-en="We act as owners in every situation. We take responsibility for challenges, proactively seek solutions, and have the autonomy to make decisions with a focus on the Company's best interest. We understand that building something relevant requires initiative, the ability to take risks, learning from mistakes, and maintaining discipline in execution.">Agimos como donos em todas as situações. Assumimos responsabilidade pelos desafios, buscamos soluções de forma proativa e temos autonomia para tomar decisões com foco no melhor interesse da Companhia. Entendemos que construir algo relevante exige iniciativa, capacidade de assumir riscos, aprender com erros e manter disciplina na execução.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-title" data-en="A Team That Plays Together">Time Que Joga Junto</div>
+      <div class="value-desc" data-en="We believe that great results are built as a team. We value collaboration, mutual respect, open communication, and recognition of individual contributions to collective success. We seek to create an environment where different perspectives complement each other and everyone acts with responsibility, trust, and a focus on common goals.">Acreditamos que grandes resultados são construídos em equipe. Valorizamos colaboração, respeito mútuo, comunicação aberta e reconhecimento das contribuições individuais para o sucesso coletivo. Buscamos criar um ambiente em que diferentes perspectivas se complementem e em que todos atuem com responsabilidade, confiança e foco em objetivos comuns.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-title" data-en="Prioritize and Simplify">Priorize e Simplifique</div>
+      <div class="value-desc" data-en="We believe simplicity is essential for executing well. We prioritize what generates the most impact, avoid unnecessary complexity, and seek to deliver with speed, learning, and consistency. Well-structured tests, focus, and the ability to adapt are fundamental for our continuous evolution.">Acreditamos que simplicidade é essencial para executar bem. Priorizamos o que gera mais impacto, evitamos complexidade desnecessária e buscamos entregar com velocidade, aprendizado e consistência. Testes bem estruturados, foco e capacidade de adaptação são fundamentais para evoluirmos continuamente.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-title" data-en="Nothing Is Impossible">Nada É Impossível</div>
+      <div class="value-desc" data-en="We believe everything can be improved, transformed, or achieved with ambition, persistence, and execution. We are not limited by ready-made answers or the way things have always been done. We seek optimistic, resilient people committed to leaving a positive legacy wherever they go.">Acreditamos que tudo pode ser melhorado, transformado ou conquistado com ambição, persistência e execução. Não nos limitamos por respostas prontas ou pela forma como as coisas sempre foram feitas. Buscamos pessoas otimistas, resilientes e comprometidas em deixar um legado positivo por onde passam.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <div class="pf-logo">méliuz</div>
+  <a href="../index.html" class="pf-back" data-en="← Back to Home Page">← Voltar para a Página Inicial</a>
+</footer>
+
+<script src="../js/lang.js"></script>
+</body>
+</html>
