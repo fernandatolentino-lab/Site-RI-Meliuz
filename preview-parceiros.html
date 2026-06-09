@@ -374,40 +374,35 @@
       left: 50%; right: 0;
       display: flex;
       flex-direction: row;
-      gap: 8px;
-      padding: 16px 12px;
+      gap: 5px;
+      padding: 0 8px;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.18;
+      opacity: 0.11;
       overflow: hidden;
     }
     .partner-col {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 5px;
       flex: 1;
     }
-    .partner-col:nth-child(even) { margin-top: 36px; }
-    .partner-col:nth-child(3n)   { margin-top: 18px; }
+    .partner-col:nth-child(even) { margin-top: 32px; }
+    .partner-col:nth-child(3n)   { margin-top: 16px; }
     .pb {
       width: 100%;
       aspect-ratio: 1;
-      background: rgba(255,255,255,0.9);
-      border-radius: 18px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
       flex-shrink: 0;
-      padding: 8px;
+      padding: 5px;
     }
     .pb img {
       width: 100%; height: 100%;
       object-fit: contain;
       display: block;
-    }
-    .pb.no-logo {
-      font-size: 7px; font-weight: 800; color: rgba(0,0,0,0.45);
-      text-transform: uppercase; letter-spacing: 0.2px;
-      text-align: center; line-height: 1.3; padding: 6px;
     }
 
     /* ─── RIGHT SIDE: phone mockup ──────────────────────────── */
@@ -1442,24 +1437,20 @@
 
   const wall = document.getElementById('partner-bg');
   const shuffled = shuffle(partners);
-  const COLS = 6;
+  const COLS = 9;
 
   for (let c = 0; c < COLS; c++) {
     const col = document.createElement('div');
     col.className = 'partner-col';
-    for (let r = 0; r < 9; r++) {
-      const file = shuffled[(c * 9 + r) % shuffled.length];
+    for (let r = 0; r < 10; r++) {
+      const file = shuffled[(c * 10 + r) % shuffled.length];
       const d = document.createElement('div');
       d.className = 'pb';
       const img = new Image();
       img.src = `images/parceiros/${file}.png`;
       img.alt = file;
-      img.onload = () => d.appendChild(img);
-      img.onerror = () => {
-        d.classList.add('no-logo');
-        d.textContent = file;
-      };
-      col.appendChild(d);
+      img.onload = () => { d.appendChild(img); col.appendChild(d); };
+      img.onerror = () => { /* skip — no placeholder */ };
     }
     wall.appendChild(col);
   }
