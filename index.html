@@ -52,7 +52,7 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: 64px;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 32px;
+      padding: 0 max(32px, calc((100% - 1440px) / 2 + 32px));
       transition: background 0.4s, border-color 0.4s;
     }
     nav.light {
@@ -169,7 +169,7 @@
     .s-core {
       height: 100vh; min-height: 640px;
       background: var(--pink);
-      padding: 64px 52px 56px;
+      padding: 64px max(52px, calc((100% - 1440px) / 2 + 52px)) 56px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
@@ -521,7 +521,7 @@
     /* ─── BRIDGE ────────────────────────────────────────────── */
     .s-bridge {
       background: var(--dark);
-      padding: 36px 52px;
+      padding: 36px max(52px, calc((100% - 1440px) / 2 + 52px));
       display: flex; align-items: center; justify-content: space-between;
       border-top: 1px solid rgba(255,255,255,0.04);
     }
@@ -539,7 +539,7 @@
     .s-btc {
       height: 100vh; min-height: 600px;
       background: var(--dark);
-      padding: 64px 52px 56px;
+      padding: 64px max(52px, calc((100% - 1440px) / 2 + 52px)) 56px;
       display: flex; align-items: flex-end;
       position: relative; overflow: hidden;
     }
@@ -599,7 +599,7 @@
     .btn-ghost-dark:hover { color: var(--white); border-color: rgba(255,255,255,0.5); }
 
     /* ─── FINANCIALS 3-CARD ─────────────────────────────────── */
-    .s-fin { background: #EFEFED; padding: 88px 52px; }
+    .s-fin { background: #EFEFED; padding: 88px max(52px, calc((100% - 1440px) / 2 + 52px)); }
 
     .fin3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .fin3-card {
@@ -684,7 +684,7 @@
     /* ─── NEWS ───────────────────────────────────────────────── */
     .s-news {
       background: var(--white);
-      padding: 88px 52px;
+      padding: 88px max(52px, calc((100% - 1440px) / 2 + 52px));
       border-top: 1px solid var(--border);
     }
     .news-grid {
@@ -710,7 +710,7 @@
     /* ─── FOOTER ─────────────────────────────────────────────── */
     footer {
       background: var(--dark);
-      padding: 72px 52px 80px; /* 80px bottom to clear ticker */
+      padding: 72px max(52px, calc((100% - 1440px) / 2 + 52px)) 80px; /* 80px bottom to clear ticker */
     }
     .footer-grid {
       display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 56px;
