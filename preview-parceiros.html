@@ -1429,55 +1429,13 @@
 <script src="js/lang.js"></script>
 <script>
   const partners = [
-    { name: 'Shopee',         domain: 'shopee.com.br' },
-    { name: 'Pontofrio',      domain: 'pontofrio.com.br' },
-    { name: 'Latam',          domain: 'latam.com' },
-    { name: 'Oral-B',         domain: 'oralb.com' },
-    { name: 'Renner',         domain: 'lojasrenner.com.br' },
-    { name: 'HP',             domain: 'hp.com' },
-    { name: 'Época',          domain: 'epocacosmeticos.com.br' },
-    { name: 'Budweiser',      domain: 'budweiser.com' },
-    { name: 'Downy',          domain: 'downy.com' },
-    { name: 'Pague Menos',    domain: 'drogariaspaguemenos.com.br' },
-    { name: 'Dell',           domain: 'dell.com' },
-    { name: 'Mercado Livre',  domain: 'mercadolivre.com.br' },
-    { name: 'KaBuM!',         domain: 'kabum.com.br' },
-    { name: 'Pepsi',          domain: 'pepsi.com' },
-    { name: 'Absolut',        domain: 'absolut.com' },
-    { name: 'Natura',         domain: 'natura.com.br' },
-    { name: 'Adidas',         domain: 'adidas.com.br' },
-    { name: 'Riachuelo',      domain: 'riachuelo.com.br' },
-    { name: 'Corona',         domain: 'corona.com' },
-    { name: 'Ajinomoto',      domain: 'ajinomoto.com.br' },
-    { name: 'Casas Bahia',    domain: 'casasbahia.com.br' },
-    { name: 'Fast Shop',      domain: 'fastshop.com.br' },
-    { name: 'Nestlé',         domain: 'nestle.com.br' },
-    { name: 'Nissin',         domain: 'nissinfoods.com.br' },
-    { name: 'Magalu',         domain: 'magazineluiza.com.br' },
-    { name: 'AliExpress',     domain: 'aliexpress.com' },
-    { name: 'SHEIN',          domain: 'shein.com' },
-    { name: 'Cobasi',         domain: 'cobasi.com.br' },
-    { name: 'LG',             domain: 'lg.com' },
-    { name: 'Listerine',      domain: 'listerine.com.br' },
-    { name: 'Pampers',        domain: 'pampers.com.br' },
-    { name: 'C&A',            domain: 'cea.com.br' },
-    { name: 'Nike',           domain: 'nike.com.br' },
-    { name: 'Samsung',        domain: 'samsung.com.br' },
-    { name: 'Sazón',          domain: 'sazon.com.br' },
-    { name: 'Elma Chips',     domain: 'elmachips.com.br' },
-    { name: 'Arcor',          domain: 'arcor.com.br' },
-    { name: 'Consul',         domain: 'consul.com.br' },
-    { name: 'Centauro',       domain: 'centauro.com.br' },
-    { name: 'Americanas',     domain: 'americanas.com.br' },
-    { name: 'iFood',          domain: 'ifood.com.br' },
-    { name: 'Guaraná',        domain: 'guarana.com.br' },
-    { name: 'Beck\'s',        domain: 'becks.com' },
-    { name: 'Spaten',         domain: 'spaten.com.br' },
-    { name: 'Beefeater',      domain: 'beefeater.com' },
-    { name: 'Ninho',          domain: 'ninho.com.br' },
-    { name: 'Vono',           domain: 'vono.com.br' },
-    { name: 'Compro Certa',   domain: 'comprocerta.com.br' },
-    { name: 'Mike\'s',        domain: 'mikesharder.com.br' },
+    'shopee','pontofrio','latam','oral-b','renner','hp','epoca',
+    'budweiser','downy','pague-menos','dell','mercado-livre','kabum',
+    'pepsi','absolut','natura','adidas','riachuelo','corona','ajinomoto',
+    'casas-bahia','fast-shop','nestle','nissin','magalu','aliexpress',
+    'shein','cobasi','lg','listerine','pampers','cea','nike','samsung',
+    'elma-chips','arcor','consul','centauro','americanas','ifood',
+    'becks','beefeater','spaten','guarana',
   ];
 
   function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
@@ -1486,23 +1444,20 @@
   const shuffled = shuffle(partners);
   const COLS = 6;
 
-  // split into columns
   for (let c = 0; c < COLS; c++) {
     const col = document.createElement('div');
     col.className = 'partner-col';
-    // each column gets ~8 logos, cycling through the list
     for (let r = 0; r < 9; r++) {
-      const { name, domain } = shuffled[(c * 9 + r) % shuffled.length];
+      const file = shuffled[(c * 9 + r) % shuffled.length];
       const d = document.createElement('div');
       d.className = 'pb';
       const img = new Image();
-      img.alt = name;
-      // try logo.dev first (works cross-origin), fallback to text
-      img.src = `https://logo.clearbit.com/${domain}`;
+      img.src = `images/parceiros/${file}.png`;
+      img.alt = file;
       img.onload = () => d.appendChild(img);
       img.onerror = () => {
         d.classList.add('no-logo');
-        d.textContent = name;
+        d.textContent = file;
       };
       col.appendChild(d);
     }
